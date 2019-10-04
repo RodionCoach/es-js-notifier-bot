@@ -2,6 +2,12 @@
   "name": "heroku",
   "version": "1.0.0",
   "main": "index.js",
+  "script": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": "10.16.3"
+  },
   "repository": "https://github.com/RodionCoach/es-js-notifier-bot-heroku.git",
   "author": "Rodion <rodion.kochetkov@effective-soft.com>",
   "license": "MIT",
