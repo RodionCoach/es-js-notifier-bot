@@ -2,8 +2,8 @@
   "name": "heroku",
   "version": "1.0.0",
   "main": "index.js",
-  "script": {
-    "start": "node src/index.js"
+  "scripts": {
+    "start": "node index.js"
   },
   "engines": {
     "node": "10.16.3"
