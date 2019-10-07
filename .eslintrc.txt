@@ -1,0 +1,28 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "class-methods-use-this": [
+      "error",
+      {
+        "exceptMethods": ["name"]
+      }
+    ],
+    "linebreak-style": "off",
+    "max-len": ["warn", {
+      "code": 120,
+      "ignoreComments": true,
+      "ignoreRegExpLiterals": true,
+      "ignoreUrls": true,
+      "tabWidth": 2
+    }],
+    "no-await-in-loop": "off",
+    "no-console": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "no-underscore-dangle": ["error", { "allow": ["__"] }],
+    "no-use-before-define": "off",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts" : true }],
+    "no-bitwise": ["error", { "allow" : ["|"] }],
+    "no-multiple-empty-lines": ["error", { "max": 1 }]
+  }
+}
