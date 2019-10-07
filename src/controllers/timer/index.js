@@ -1,16 +1,14 @@
-const bot_config = require('../bot_config.js');
+const bot_data = require('../../bot_config');
 
-let startNotify = (ctx, period=bot_config.period) => {
-  console.log(period);
+let startNotify = (ctx, period = bot_data.config.period) => {
   setTimeout(function repeat(ctx) {
-    ctx.reply('Проветрюли!');
-    console.log(startNotify);
+    ctx.replyWithPhoto(process.env.FILE_ID);
     startNotify = setTimeout(repeat, period, ctx);
   }, period, ctx);
 };
 
 const stoptNotify = (ctx) => {
-  ctx.reply('Stopped!');
+  ctx.reply('Bot has been Stopped!');
   clearTimeout(startNotify);
 }
 

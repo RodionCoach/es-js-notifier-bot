@@ -1,3 +1,3 @@
-const ready_bot = require('./src/controllers/index.js');
+const bot = require('./src/telegram');
 
-ready_bot.launch().catch((err) => {throw new Error(err.message)});
+bot.launch().catch((err) => {throw new Error(err.message)});

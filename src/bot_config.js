@@ -1,4 +1,8 @@
-const config = {
-    mode: 'default',
-    period: 5000
-}
+const data = {
+    config: {
+      mode: 'default',
+      period: 5000
+    }
+};
+
+module.exports = data;
