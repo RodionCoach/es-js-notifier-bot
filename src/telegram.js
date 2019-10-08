@@ -4,7 +4,7 @@ const bot_setup = require('./controllers/timer/index');
 const bot_data = require('./bot_config');
 require('dotenv').config();
 
-const bot = new Telegraf(process.env.BOT_TOKEN || process.env.BOT_TOKEN);
+const bot = new Telegraf(process.env.BOT_TOKEN || 3000);
 
 bot.start((ctx) => ctx.reply('Welcome'));
 bot.settings((ctx) => ctx.reply('currently settings: ' + JSON.stringify(bot_data)));
