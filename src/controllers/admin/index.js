@@ -1,15 +1,15 @@
 // const fs = require('fs');
-const botData = require('../../bot_config');
+const botConfig = require('../../bot_config');
 
-function adminConfigurations(bot) {
+const adminConfigurations = (bot) => {
   bot.on('photo', (ctx) => {
     if (ctx.message.chat.id === +process.env.ADMIN_CHAT_ID) {
-      botData.imgs = ctx.message.photo;
-      ctx.replyWithPhoto(botData.imgs[botData.imgs.length - 1].file_id);
+      botConfig.imgs = ctx.message.photo;
+      ctx.replyWithPhoto(botConfig.imgs[botConfig.imgs.length - 1].file_id);
     } else {
       ctx.reply('You are not admin!');
     }
   });
-}
+};
 
 module.exports = adminConfigurations;
