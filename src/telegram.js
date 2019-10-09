@@ -1,18 +1,17 @@
+const EventEmitter = require('events');
 const Telegraf = require('telegraf');
-const botTimer = require('./controllers/timer/index');
-const botSetup = require('./controllers/timer/index');
-const botData = require('./bot_config');
+const Stage = require('telegraf/stage');
+const { setInterval, setTime, setMode } = require('./controllers/setup/scenes');
+const botInit = require('./controllers/setup/index');
 require('dotenv').config();
 
-const bot = new Telegraf(process.env.BOT_TOKEN || 3000);
+const emitter = new EventEmitter();
 
-bot.start((ctx) => ctx.reply('Welcome'));
-bot.settings((ctx) => ctx.reply(`currently settings: ${JSON.stringify(botData)}`));
-bot.command('fresh_air', (ctx) => ctx.replyWithPhoto(process.env.FILE_ID));
-bot.command('bot_setup', (ctx) => botSetup(ctx));
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.command('run', (ctx) => botTimer.run(ctx));
-bot.command('run_default', (ctx) => botTimer.run(ctx));
-bot.command('stop', (ctx) => botTimer.stop(ctx));
+const stage = new Stage([setInterval(), setTime(), setMode()], { default: 'bot_setup' });
+
+botInit(bot, stage);
+emitter.setMaxListeners(emitter.getMaxListeners() + 1);
 
 module.exports = bot;
