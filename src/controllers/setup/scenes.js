@@ -13,7 +13,7 @@ const setInterval = () => new WizardScene('setInterval',
   async (ctx) => {
     const message = ctx.message.text;
     if (timeRegExp.test(message)) {
-      data.config.period = new Date(`1970-01-01T${message}Z`).getTime();
+      data.config.period = new Date(`1970-01-01T${message}Z`).getTime() / 1000;
       ctx.reply(`Done!\nBot occur interval is ${message}`);
       return ctx.scene.leave();
     }
