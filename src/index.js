@@ -7,10 +7,11 @@ if (process.env.ENV === 'prod') {
 
   const app = new Koa();
   app.use(koaBody());
-  app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === '/secret-path'
+  app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === '/'
     ? bot.handleUpdate(ctx.request.body, ctx.response)
     : next()));
   app.listen(process.env.PORT);
+  bot.startWebhook(process.env.WEBHOOK_PATH, process.env.PORT);
 } else if (process.env.ENV === 'dev') {
   bot.launch().catch((err) => { throw new Error(err.message); });
 }
