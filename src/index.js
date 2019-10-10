@@ -9,6 +9,6 @@ app.use(koaBody());
 app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === `/bot${process.env.BOT_TOKEN}/setWebhook`
   ? bot.handleUpdate(ctx.request.body, ctx.response)
   : next()));
-app.listen(process.env.PORT || 8000);
+app.listen(process.env.PORT);
 
-// bot.launch().catch((err) => { throw new Error(err.message); });
+bot.launch().catch((err) => { throw new Error(err.message); });
