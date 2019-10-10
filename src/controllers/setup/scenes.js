@@ -3,7 +3,6 @@ const { keqboardCancel, keqboardModes } = require('./markup');
 const { data } = require('../../bot_config');
 
 const timeRegExp = new RegExp(process.env.TIME_REX_EXP);
-const modeRegExp = new RegExp(process.env.MODE_REX_EXP);
 
 const setInterval = () => new WizardScene('setInterval',
   (ctx) => {
