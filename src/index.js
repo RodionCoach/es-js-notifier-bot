@@ -3,7 +3,7 @@ const koaBody = require('koa-body');
 const bot = require('./telegram');
 
 if (process.env.ENV === 'prod') {
-  bot.telegram.setWebhook('https://es-js-notifier-bot.herokuapp.com/');
+  bot.launch().catch((err) => { throw new Error(err.message); });
 
   const app = new Koa();
   app.use(koaBody());
