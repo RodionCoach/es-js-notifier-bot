@@ -3,11 +3,11 @@ const koaBody = require('koa-body');
 const bot = require('./telegram');
 
 if (process.env.ENV === 'prod') {
-  bot.launch().catch((err) => { throw new Error(err.message); });
+  bot.telegram.setWebhook(process.env.WEBHOOK_PATH);
 
   const app = new Koa();
   app.use(koaBody());
-  app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === '/'
+  app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === '/secret-path'
     ? bot.handleUpdate(ctx.request.body, ctx.response)
     : next()));
   app.listen(process.env.PORT);
