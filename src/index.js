@@ -2,13 +2,15 @@ const Koa = require('koa');
 const koaBody = require('koa-body');
 const bot = require('./telegram');
 
-bot.telegram.setWebhook(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/setWebhook`);
+if (process.env.ENV === 'prod') {
+  bot.telegram.setWebhook('https://es-js-notifier-bot.herokuapp.com/');
 
-const app = new Koa();
-app.use(koaBody());
-app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === `/bot${process.env.BOT_TOKEN}/setWebhook`
-  ? bot.handleUpdate(ctx.request.body, ctx.response)
-  : next()));
-app.listen(process.env.PORT);
-
-bot.launch().catch((err) => { throw new Error(err.message); });
+  const app = new Koa();
+  app.use(koaBody());
+  app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === '/'
+    ? bot.handleUpdate(ctx.request.body, ctx.response)
+    : next()));
+  app.listen(process.env.PORT);
+} else if (process.env.ENV === 'dev') {
+  bot.launch().catch((err) => { throw new Error(err.message); });
+}

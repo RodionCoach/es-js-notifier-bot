@@ -7,13 +7,13 @@ const modeRegExp = new RegExp(process.env.MODE_REX_EXP);
 
 const setInterval = () => new WizardScene('setInterval',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type the interval.\nPlease use this format 00:00\n\nor press "Cancel"');
+    keqboardCancel(ctx, 'Please type the interval.\nPlease use this format hh:mm\n\nor press "Cancel"');
     return ctx.wizard.next();
   },
   async (ctx) => {
     const message = ctx.message.text;
     if (timeRegExp.test(message)) {
-      data.config.period = new Date(`1970-01-01T${message}Z`).getTime() / 1000;
+      data.config.interval = message;
       ctx.reply(`Done!\nBot occur interval is ${message}`);
       return ctx.scene.leave();
     }
@@ -23,7 +23,7 @@ const setInterval = () => new WizardScene('setInterval',
 
 const setTime = () => new WizardScene('setTime',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type the occur time.\nPlease use this format 00:00\n\nor press "Cancel"');
+    keqboardCancel(ctx, 'Please type the occur time.\nPlease use this format hh:mm\n\nor press "Cancel"');
     return ctx.wizard.next();
   },
   async (ctx) => {

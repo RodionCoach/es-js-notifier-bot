@@ -1,14 +1,14 @@
 const data = {
   config: {
     mode: null,
-    period: null,
+    interval: null,
     time: null,
   },
 };
 
-const init = (mode, period, time, ...rest) => {
+const init = (mode, interval, time, ...rest) => {
   data.config.mode = mode;
-  data.config.period = +period;
+  data.config.interval = interval;
   data.config.time = time;
   console.log(rest);
 };
