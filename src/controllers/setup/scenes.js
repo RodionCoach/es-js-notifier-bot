@@ -1,5 +1,5 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const { keqboardCancel } = require('./markup');
+const { keqboardCancel, keqboardModes } = require('./markup');
 const { data } = require('../../bot_config');
 
 const timeRegExp = new RegExp(process.env.TIME_REX_EXP);
@@ -39,18 +39,12 @@ const setTime = () => new WizardScene('setTime',
 
 const setMode = () => new WizardScene('setMode',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type the bot mode.\nPlease type "interval" or "time"\n\nor press "Cancel"');
+    keqboardModes(ctx, 'Please type the bot mode.\nPlease type "interval" or "time"\n\nor press "Cancel"');
     return ctx.wizard.next();
   },
-  async (ctx) => {
-    const message = ctx.message.text;
-    if (modeRegExp.test(message)) {
-      data.config.mode = message;
-      ctx.reply(`Done!\nBot mode now is ${message}`);
-      return ctx.scene.leave();
-    }
-    await ctx.reply('Sorry! Bad format, try again, you fool');
-    return ctx.wizard.back();
+  (ctx) => {
+    ctx.reply(`Done!\nBot mode now is ${data.config.mode}`);
+    return ctx.scene.leave();
   });
 
 module.exports = { setInterval, setTime, setMode };

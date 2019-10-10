@@ -20,7 +20,7 @@ const botInit = (bot, stage) => {
         if (isAdmin(ctx)) {
           running = true;
           if (!currentTask.notify) {
-            currentTask.notify = scheduleInit(ctx.replyWithPhoto(process.env.FILE_ID));
+            currentTask.notify = scheduleInit(ctx.replyWithPhoto);
           }
           botNotify(currentTask.notify, 'start');
           ctx.reply('Bot started!');
@@ -33,7 +33,7 @@ const botInit = (bot, stage) => {
       if (!running) {
         if (isAdmin(ctx)) {
           running = true;
-          init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_DATE_TRIGGER);
+          init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
           if (!currentTask.notify) {
             currentTask.notify = scheduleInit(ctx.replyWithPhoto(process.env.FILE_ID));
           }
@@ -49,7 +49,7 @@ const botInit = (bot, stage) => {
         if (isAdmin(ctx)) {
           running = false;
           if (!currentTask.notify) {
-            currentTask.notify = scheduleInit(ctx.replyWithPhoto(process.env.FILE_ID));
+            currentTask.notify = scheduleInit(ctx.replyWithPhoto);
           }
           botNotify(currentTask.notify, 'stop');
           ctx.reply('Bot has been Stopped!');
@@ -64,6 +64,8 @@ const botInit = (bot, stage) => {
     bot.action('setInterval', (ctx) => isAdmin(ctx) && ctx.scene.enter('setInterval'));
     bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
     bot.action('setMode', (ctx) => isAdmin(ctx) && ctx.scene.enter('setMode'));
+    bot.action('setModeInterval', () => { data.config.mode = process.env.BOT_MODE_INTERVAL; });
+    bot.action('setModeTime', () => { data.config.mode = process.env.BOT_MODE_TIME; });
     bot.action('Cancel', (ctx) => isAdmin(ctx) && ctx.scene.leave());
   } catch (error) {
     console.log(error);
