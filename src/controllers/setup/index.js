@@ -2,11 +2,13 @@ const session = require('telegraf/session');
 const { keqboardChoice } = require('./markup');
 const { isAdmin } = require('../admin/index');
 const { init, data } = require('../../bot_config');
-const { startNotify, stoptNotify } = require('../timer/index');
-
-let running = false;
+const { botNotify } = require('../timer/index');
+const scheduleInit = require('../timer/taskInit');
 
 const botInit = (bot, stage) => {
+  let running = false;
+  const currentTask = {};
+
   try {
     init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
     bot.start((ctx) => ctx.reply('Welcome'));
@@ -17,7 +19,10 @@ const botInit = (bot, stage) => {
       if (!running) {
         if (isAdmin(ctx)) {
           running = true;
-          startNotify(ctx);
+          if (!currentTask.notify) {
+            currentTask.notify = scheduleInit(ctx.replyWithPhoto);
+          }
+          botNotify(currentTask.notify, 'start');
           ctx.reply('Bot started!');
         }
       } else {
@@ -28,8 +33,11 @@ const botInit = (bot, stage) => {
       if (!running) {
         if (isAdmin(ctx)) {
           running = true;
-          init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_DATE_TRIGGER);
-          startNotify(ctx);
+          init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
+          if (!currentTask.notify) {
+            currentTask.notify = scheduleInit(ctx.replyWithPhoto(process.env.FILE_ID));
+          }
+          botNotify(currentTask.notify, 'start');
           ctx.reply('Bot started!');
         }
       } else {
@@ -40,7 +48,10 @@ const botInit = (bot, stage) => {
       if (running) {
         if (isAdmin(ctx)) {
           running = false;
-          stoptNotify();
+          if (!currentTask.notify) {
+            currentTask.notify = scheduleInit(ctx.replyWithPhoto);
+          }
+          botNotify(currentTask.notify, 'stop');
           ctx.reply('Bot has been Stopped!');
         }
       } else {
@@ -53,6 +64,8 @@ const botInit = (bot, stage) => {
     bot.action('setInterval', (ctx) => isAdmin(ctx) && ctx.scene.enter('setInterval'));
     bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
     bot.action('setMode', (ctx) => isAdmin(ctx) && ctx.scene.enter('setMode'));
+    bot.action('setModeInterval', () => { data.config.mode = process.env.BOT_MODE_INTERVAL; });
+    bot.action('setModeTime', () => { data.config.mode = process.env.BOT_MODE_TIME; });
     bot.action('Cancel', (ctx) => isAdmin(ctx) && ctx.scene.leave());
   } catch (error) {
     console.log(error);

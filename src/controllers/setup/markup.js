@@ -15,5 +15,13 @@ const keqboardCancel = (ctx, message) => {
   ]).extra());
 };
 
-module.exports = { keqboardChoice, keqboardCancel };
+const keqboardModes = (ctx, message) => {
+  ctx.reply(message, Markup.inlineKeyboard([
+    Markup.callbackButton('Interval', 'setModeInterval'),
+    Markup.callbackButton('Time', 'setModeTime'),
+    Markup.callbackButton('Cancel', 'Cancel'),
+  ]).extra());
+};
+
+module.exports = { keqboardChoice, keqboardCancel, keqboardModes };
 
