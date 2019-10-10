@@ -11,7 +11,6 @@ if (process.env.ENV === 'prod') {
     ? bot.handleUpdate(ctx.request.body, ctx.response)
     : next()));
   app.listen(process.env.PORT);
-  bot.startWebhook(process.env.WEBHOOK_PATH, process.env.PORT);
 } else if (process.env.ENV === 'dev') {
   bot.launch().catch((err) => { throw new Error(err.message); });
 }
