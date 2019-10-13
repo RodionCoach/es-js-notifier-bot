@@ -1,16 +1,21 @@
 const session = require('telegraf/session');
+const Stage = require('telegraf/stage');
 const { keqboardChoice } = require('./markup');
 const { isAdmin } = require('../admin/index');
 const { init, data } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
 const scheduleInit = require('../timer/taskInit');
+const { setInterval, setTime, setMode } = require('./scenes');
+// const { enter, leave } = Stage;
 require('dotenv').config();
 
-const botInit = (bot, stage) => {
+const botInit = (bot) => {
   let running = false;
   const currentTask = {};
 
   try {
+    const stage = new Stage([setInterval(), setTime(), setMode()], { default: 'bot_setup' });
+
     init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
     bot.start((ctx) => ctx.reply('Welcome'));
     bot.settings((ctx) => ctx.reply(`currently settings: ${JSON.stringify(data.config)}`));
@@ -67,7 +72,6 @@ const botInit = (bot, stage) => {
     bot.action('setMode', (ctx) => isAdmin(ctx) && ctx.scene.enter('setMode'));
     bot.action('setModeInterval', () => { data.config.mode = process.env.BOT_MODE_INTERVAL; });
     bot.action('setModeTime', () => { data.config.mode = process.env.BOT_MODE_TIME; });
-    bot.action('Cancel', (ctx) => isAdmin(ctx) && ctx.scene.leave());
   } catch (error) {
     console.log(error);
   }
