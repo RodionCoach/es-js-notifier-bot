@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const { data } = require('../../bot_config'); // better to require it or to put in arguments
+require('dotenv').config();
 
 const scheduleInit = (task) => {
   let configuredTask;

@@ -4,6 +4,7 @@ const { isAdmin } = require('../admin/index');
 const { init, data } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
 const scheduleInit = require('../timer/taskInit');
+require('dotenv').config();
 
 const botInit = (bot, stage) => {
   let running = false;

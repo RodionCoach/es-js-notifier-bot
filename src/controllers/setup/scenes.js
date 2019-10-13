@@ -1,8 +1,9 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const { keqboardCancel, keqboardModes } = require('./markup');
 const { data } = require('../../bot_config');
+require('dotenv').config();
 
-const timeRegExp = new RegExp(process.env.TIME_REX_EXP);
+const regExp = new RegExp(process.env.REG_EXP);
 
 const setInterval = () => new WizardScene('setInterval',
   (ctx) => {
@@ -11,13 +12,13 @@ const setInterval = () => new WizardScene('setInterval',
   },
   async (ctx) => {
     const message = ctx.message.text;
-    if (timeRegExp.test(message)) {
+    if (regExp.test(message)) {
       data.config.interval = message;
       ctx.reply(`Done!\nBot occur interval is ${message}`);
       return ctx.scene.leave();
     }
     await ctx.reply('Sorry! Bad format, try again, you fool');
-    return ctx.wizard.back();
+    return ctx.scene.back();
   });
 
 const setTime = () => new WizardScene('setTime',
@@ -27,7 +28,7 @@ const setTime = () => new WizardScene('setTime',
   },
   async (ctx) => {
     const message = ctx.message.text;
-    if (timeRegExp.test(message)) {
+    if (regExp.test(message)) {
       data.config.time = message;
       ctx.reply(`Done!\nBot occur time is ${message}`);
       return ctx.scene.leave();
