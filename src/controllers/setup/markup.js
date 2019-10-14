@@ -3,9 +3,7 @@ const Markup = require('telegraf/markup');
 
 const keqboardChoice = (ctx, message) => {
   ctx.reply(message, Markup.inlineKeyboard([
-    Markup.callbackButton('Set Interval', 'setInterval'),
     Markup.callbackButton('Set Time', 'setTime'),
-    Markup.callbackButton('Set Mode', 'setMode'),
   ]).extra());
 };
 

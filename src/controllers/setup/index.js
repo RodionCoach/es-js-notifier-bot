@@ -6,16 +6,16 @@ const { botNotify } = require('../timer/index');
 const scheduleInit = require('../timer/taskInit');
 require('dotenv').config();
 
-const botInit = (bot, stage) => {
+const botInit = (bot, stage, Stage) => {
   let running = false;
   const currentTasks = {};
 
   try {
     initConfig(process.env.BOT_MODE, process.env.BOT_MODE_TIME, process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
-    bot.settings((ctx) => ctx.reply(`current bot settings: ${JSON.stringify(data.config)}`));
+    bot.settings((ctx) => isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify(data.config)}`));
     bot.command('is_running', (ctx) => isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`));
     bot.command('fresh_air', (ctx) => isAdmin(ctx) && !running && ctx.replyWithPhoto(process.env.FILE_ID));
-    bot.command('setup', (ctx) => isAdmin(ctx) && !running && keqboardChoice(ctx, 'Please choise bot behavior'));
+    bot.command('setup', (ctx) => isAdmin(ctx) && !running && keqboardChoice(ctx, 'Please choise the option'));
     bot.command('run', (ctx) => {
       if (!running) {
         if (isAdmin(ctx)) {
@@ -34,7 +34,7 @@ const botInit = (bot, stage) => {
       if (!running) {
         if (isAdmin(ctx)) {
           running = true;
-          init(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
+          initConfig(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
           if (!currentTasks.notify) {
             currentTasks.notify = scheduleInit(ctx.replyWithPhoto);
           }
@@ -60,10 +60,7 @@ const botInit = (bot, stage) => {
     bot.use(session());
     bot.use(stage.middleware());
     bot.action('setInterval', (ctx) => isAdmin(ctx) && ctx.scene.enter('setInterval'));
-    bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
-    bot.action('setMode', (ctx) => isAdmin(ctx) && ctx.scene.enter('setMode'));
-    bot.action('setModeInterval', () => { data.config.mode = process.env.BOT_MODE_INTERVAL; });
-    bot.action('setModeTime', () => { data.config.mode = process.env.BOT_MODE_TIME; });
+    bot.action('setTime', (ctx) => isAdmin(ctx) && Stage.enter('setTime'));
   } catch (error) {
     console.log(error);
   }
