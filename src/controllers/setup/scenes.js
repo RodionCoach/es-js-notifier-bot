@@ -10,7 +10,7 @@ const setInterval = () => new WizardScene('setInterval',
     keqboardCancel(ctx, 'Please type the interval.\nPlease use this format hh:mm\n\nor press "Cancel"');
     return ctx.wizard.next();
   },
-  async (ctx) => {
+  (ctx) => {
     const message = (ctx.message && ctx.message.text) || '';
     if (regExp.test(message)) {
       data.config.interval = message;
@@ -18,10 +18,10 @@ const setInterval = () => new WizardScene('setInterval',
       return ctx.scene.leave();
     // eslint-disable-next-line no-else-return
     } else if (message === '') {
-      await ctx.reply('Action has been cancelled!');
+      ctx.reply('Action has been cancelled!');
       return ctx.scene.leave();
     } else {
-      await ctx.reply('Sorry! Bad format, try again, you fool');
+      ctx.reply('Sorry! Bad format, try again, you fool');
       return ctx.wizard.back();
     }
   });
@@ -31,18 +31,18 @@ const setTime = () => new WizardScene('setTime',
     keqboardCancel(ctx, 'Please type the occur time.\nPlease use this format hh:mm\n\nor press "Cancel"');
     return ctx.wizard.next();
   },
-  async (ctx) => {
+  (ctx) => {
     const message = (ctx.message && ctx.message.text) || '';
     if (regExp.test(message)) {
       data.config.time = message;
-      await ctx.reply(`Done!\nBot occur time is ${message}`);
+      ctx.reply(`Done!\nBot occur time is ${message}`);
       return ctx.scene.leave();
     // eslint-disable-next-line no-else-return
     } else if (message === '') {
-      await ctx.reply('Action has been cancelled!');
+      ctx.reply('Action has been cancelled!');
       return ctx.scene.leave();
     } else {
-      await ctx.reply('Sorry! Bad format, try again, you fool');
+      ctx.reply('Sorry! Bad format, try again, you fool');
       return ctx.wizard.back();
     }
   });
@@ -53,11 +53,6 @@ const setMode = () => new WizardScene('setMode',
     return ctx.wizard.next();
   },
   (ctx) => {
-    const message = (ctx.message && ctx.message.text) || '';
-    if (message === '') {
-      ctx.reply('Action has been cancelled!');
-      return ctx.scene.leave();
-    }
     ctx.reply(`Done!\nBot mode now is ${data.config.mode}`);
     return ctx.scene.leave();
   });
