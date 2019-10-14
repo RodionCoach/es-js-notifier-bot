@@ -1,8 +1,8 @@
 const EventEmitter = require('events');
 const Telegraf = require('telegraf');
 const Stage = require('telegraf/stage');
-const { setInterval, setTime, setMode } = require('./controllers/setup/scenes');
 const botInit = require('./controllers/setup/index');
+const { setInterval, setTime, setMode } = require('./controllers/setup/scenes');
 require('dotenv').config();
 
 const emitter = new EventEmitter();

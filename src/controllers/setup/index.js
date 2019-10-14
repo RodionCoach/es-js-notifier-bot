@@ -4,6 +4,7 @@ const { isAdmin } = require('../admin/index');
 const { init, data } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
 const scheduleInit = require('../timer/taskInit');
+require('dotenv').config();
 
 const botInit = (bot, stage) => {
   let running = false;
@@ -66,7 +67,6 @@ const botInit = (bot, stage) => {
     bot.action('setMode', (ctx) => isAdmin(ctx) && ctx.scene.enter('setMode'));
     bot.action('setModeInterval', () => { data.config.mode = process.env.BOT_MODE_INTERVAL; });
     bot.action('setModeTime', () => { data.config.mode = process.env.BOT_MODE_TIME; });
-    bot.action('Cancel', (ctx) => isAdmin(ctx) && ctx.scene.leave());
   } catch (error) {
     console.log(error);
   }
