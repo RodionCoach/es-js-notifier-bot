@@ -1,39 +1,38 @@
 const { isAdmin } = require('../admin/index');
-const { init, data } = require('../../bot_config');
+const { initConfig, data } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
 const scheduleInit = require('../timer/taskInit');
 require('dotenv').config();
 
 const botInit = (bot) => {
-  let running = false;
   const currentTask = {};
 
   try {
-    init(process.env.BOT_MODE, process.env.BOT_MODE_TIME, process.env.BOT_OCCUR_TIME);
-    bot.start((ctx) => ctx.reply('Welcome'));
-    bot.settings((ctx) => ctx.reply(`currently settings: ${JSON.stringify(data.config)}`));
+    initConfig(process.env.BOT_MODE, process.env.BOT_MODE_TIME, process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
+    bot.settings((ctx) => isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify(data.config)}`));
+    bot.command('is_running', (ctx) => isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`));
     bot.command('run', (ctx) => {
-      if (!running) {
+      if (!data.config.isRunning) {
         if (isAdmin(ctx)) {
-          running = true;
+          data.config.isRunning = !data.config.isRunning;
           if (!currentTask.notify) {
             currentTask.notify = scheduleInit(ctx.replyWithPhoto);
           }
           botNotify(currentTask.notify, 'start');
           ctx.reply('Bot started!');
         }
-      } else {
+      } else if (isAdmin(ctx)) {
         ctx.reply('The bot is running already!');
       }
     });
     bot.command('stop', (ctx) => {
-      if (running) {
+      if (data.config.isRunning) {
         if (isAdmin(ctx)) {
-          running = false;
+          data.config.isRunning = !data.config.isRunning;
           botNotify(currentTask.notify, 'stop');
           ctx.reply('Bot has been Stopped!');
         }
-      } else {
+      } else if (isAdmin(ctx)) {
         ctx.reply('The bot is not running yet!');
       }
     });

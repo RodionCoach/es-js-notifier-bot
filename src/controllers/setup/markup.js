@@ -24,4 +24,3 @@ const keqboardModes = (ctx, message) => {
 };
 
 module.exports = { keqboardChoice, keqboardCancel, keqboardModes };
-
