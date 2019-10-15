@@ -1,31 +1,32 @@
-const Scene = require('telegraf/scenes/base');
-// const { keqboardCancel } = require('./markup');
-// const { data } = require('../../bot_config');
+const WizardScene = require('telegraf/scenes/wizard');
+const cron = require('node-cron');
+const { isAdmin } = require('../admin/index');
+const { keqboardCancel } = require('./markup');
 require('dotenv').config();
 
-// const regExp = new RegExp(process.env.REG_EXP);
+const setTimeScene = new WizardScene('setTime',
+  (ctx) => {
+    keqboardCancel(ctx, 'Please type cron format time: * * * * *');
+    return ctx.wizard.next();
+  },
+  (ctx) => {
+    if (!isAdmin(ctx)) {
+      return ctx.scene.leave();
+    }
+    const message = (ctx.message && ctx.message.text) || ''; // cancellation check
+    if (!message) {
+      ctx.reply('Setup has been cancelled');
+      return ctx.scene.leave();
+    }
+    if (cron.validate(message)) {
+      ctx.config.time = message;
+      ctx.reply(`Done!\nBot occur time is ${message}`);
+      return ctx.scene.leave();
+    }
+    ctx.reply('Sorry! Bad format, try again');
+    ctx.wizard.back(); // Set the listener to the previous function
+    return ctx.wizard.steps[ctx.wizard.cursor](ctx);
+  });
 
-const setTime = new Scene('setTime');
-
-// (ctx) => {
-//   keqboardCancel(ctx, 'Please type the occur time.\nPlease use this format hh:mm\n\nor press "Cancel"');
-//   return ctx.wizard.next();
-// },
-// async (ctx) => {
-//   const message = (ctx.message && ctx.message.text) || '';
-//   if (regExp.test(message)) {
-//     data.config.time = message;
-//     await ctx.reply(`Done!\nBot occur time is ${message}`);
-//     return ctx.scene.leave();
-//   // eslint-disable-next-line no-else-return
-//   } else if (message === '') {
-//     await ctx.reply('Action has been cancelled!');
-//     return ctx.scene.leave();
-//   } else {
-//     await ctx.reply('Sorry! Bad format, try again, you fool');
-//     return ctx.wizard.back();
-//   }
-// });
-
-module.exports = { setInterval, setTime };
+module.exports = { setTimeScene };
 

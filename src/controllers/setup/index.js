@@ -1,19 +1,18 @@
-const session = require('telegraf/session');
+const session = require('telegraf/session'),
+scheduleInit = require('../timer/taskInit');
 const { keqboardChoice } = require('./markup');
 const { isAdmin } = require('../admin/index');
-const { initConfig, data } = require('../../bot_config');
+const { initConfig } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
-const scheduleInit = require('../timer/taskInit');
 require('dotenv').config();
 
-const botInit = (bot, stage, Stage) => {
+const botInit = (bot, stage, localSession) => {
   let running = false;
   const currentTasks = {};
 
   try {
-    initConfig(process.env.BOT_MODE, process.env.BOT_MODE_TIME, process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
-    bot.settings((ctx) => isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify(data.config)}`));
-    bot.command('is_running', (ctx) => isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`));
+    bot.settings((ctx) => isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify(ctx.config)}`));
+    bot.command('is_running', (ctx) => isAdmin(ctx) && ctx.reply(`bot is running: ${ctx.config.isRunning}`));
     bot.command('fresh_air', (ctx) => isAdmin(ctx) && !running && ctx.replyWithPhoto(process.env.FILE_ID));
     bot.command('setup', (ctx) => isAdmin(ctx) && !running && keqboardChoice(ctx, 'Please choise the option'));
     bot.command('run', (ctx) => {
@@ -21,7 +20,7 @@ const botInit = (bot, stage, Stage) => {
         if (isAdmin(ctx)) {
           running = true;
           if (!currentTasks.notify) {
-            currentTasks.notify = scheduleInit(ctx.replyWithPhoto);
+            currentTasks.notify = scheduleInit(ctx, ctx.replyWithPhoto, process.env.FILE_ID);
           }
           botNotify(currentTasks.notify, 'start');
           ctx.reply('Bot started!');
@@ -34,9 +33,9 @@ const botInit = (bot, stage, Stage) => {
       if (!running) {
         if (isAdmin(ctx)) {
           running = true;
-          initConfig(process.env.BOT_MODE, process.env.BOT_INTERVAL, process.env.BOT_OCCUR_TIME);
+          initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
           if (!currentTasks.notify) {
-            currentTasks.notify = scheduleInit(ctx.replyWithPhoto);
+            currentTasks.notify = scheduleInit(ctx, ctx.replyWithPhoto, process.env.FILE_ID);
           }
           botNotify(currentTasks.notify, 'start');
           ctx.reply('Bot started!');
@@ -59,8 +58,11 @@ const botInit = (bot, stage, Stage) => {
 
     bot.use(session());
     bot.use(stage.middleware());
-    bot.action('setInterval', (ctx) => isAdmin(ctx) && ctx.scene.enter('setInterval'));
-    bot.action('setTime', (ctx) => isAdmin(ctx) && Stage.enter('setTime'));
+    bot.use(localSession.middleware())
+    bot.use( (ctx) => initConfig(ctx, process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING));
+
+    bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
+    bot.action('cancellation', (ctx) => isAdmin(ctx) && ctx.scene.leave('setTime'));
   } catch (error) {
     console.log(error);
   }
