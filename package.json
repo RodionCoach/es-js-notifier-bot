@@ -7,7 +7,10 @@
     "dev": "nodemon ./src/index.js"
   },
   "nodemonConfig": {
-    "ignore": ["*.json", "Procfile"]
+    "ignore": [
+      "*.json",
+      "Procfile"
+    ]
   },
   "husky": {
     "hooks": {

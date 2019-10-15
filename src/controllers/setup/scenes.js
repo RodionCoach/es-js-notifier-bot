@@ -1,6 +1,7 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const cron = require('node-cron');
 const { isAdmin } = require('../admin/index');
+const { data } = require('../../bot_config');
 const { keqboardCancel } = require('./markup');
 require('dotenv').config();
 
@@ -19,7 +20,7 @@ const setTimeScene = new WizardScene('setTime',
       return ctx.scene.leave();
     }
     if (cron.validate(message)) {
-      ctx.config.time = message;
+      data.config.time = message;
       ctx.reply(`Done!\nBot occur time is ${message}`);
       return ctx.scene.leave();
     }
