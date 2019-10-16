@@ -11,6 +11,10 @@ const adminConfigurations = (bot) => {
   });
 };
 
+const deleteMessage = (ctx) => {
+  ctx.deleteMessage(ctx.message.message_id);
+};
+
 const isAdmin = (ctx) => process.env.ADMIN_CHAT_ID.includes(`${ctx.from.id}`);
 
-module.exports = { adminConfigurations, isAdmin };
+module.exports = { adminConfigurations, deleteMessage, isAdmin };

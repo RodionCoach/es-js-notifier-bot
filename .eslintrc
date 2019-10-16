@@ -9,7 +9,7 @@
     ],
     "linebreak-style": "off",
     "max-len": ["error", {
-      "code": 120,
+      "code": 155,
       "ignoreComments": true,
       "ignoreRegExpLiterals": true,
       "ignoreUrls": true,

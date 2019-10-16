@@ -25,7 +25,7 @@ const setTimeScene = new WizardScene('setTime',
       return ctx.scene.leave();
     }
     ctx.reply('Sorry! Bad format, try again');
-    ctx.wizard.back(); // Set the listener to the previous function
+    ctx.wizard.back(); // set the listener to the previous function
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   });
 
