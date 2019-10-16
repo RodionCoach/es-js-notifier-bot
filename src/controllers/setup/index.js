@@ -17,23 +17,18 @@ const botInit = (bot, stage) => {
   );
   bot.command('is_running',
     (ctx) => (isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`)) || deleteMessage(ctx));
-  bot.command('cleanup_db', (ctx) => {
-    if (isAdmin(ctx)) {
-      data.config = null;
-    }
-  });
   bot.command('fresh_air',
     (ctx) => (isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(process.env.FILE_ID)) || deleteMessage(ctx));
   bot.command('setup',
     (ctx) => (isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option')) || deleteMessage(ctx));
-  bot.command('run', (ctx) => {
+  bot.command('run', async (ctx) => {
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notify) {
-          currentTasks.notify = scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
+          currentTasks.notify = await scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
         }
-        botNotify(currentTasks.notify, 'start');
+        await botNotify(currentTasks.notify, 'start');
         ctx.reply('Bot started!');
       } else {
         ctx.reply('The bot is running already!');
@@ -42,15 +37,15 @@ const botInit = (bot, stage) => {
       deleteMessage(ctx);
     }
   });
-  bot.command('run_default', (ctx) => {
+  bot.command('run_default', async (ctx) => {
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
+        initConfig(process.env.BOT_OCCUR_TIME);
         data.config.isRunning = !data.config.isRunning;
-        initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
         if (!currentTasks.notify) {
-          currentTasks.notify = scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
+          currentTasks.notify = await scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
         }
-        botNotify(currentTasks.notify, 'start');
+        await botNotify(currentTasks.notify, 'start');
         ctx.reply('Bot started!');
       } else {
         ctx.reply('The bot is running already!');
