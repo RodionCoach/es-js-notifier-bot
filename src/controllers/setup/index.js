@@ -9,7 +9,7 @@ require('dotenv').config();
 const botInit = (bot, stage) => {
   const currentTasks = {};
 
-  const cleanTasks = (tasks) => { for (const i in tasks) { if (tasks.i) { delete tasks[i]; } } };
+  // const cleanTasks = (tasks) => { for (const i in tasks) { if (tasks.i) { delete tasks[i]; } } };
   initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
   bot.catch((err) => { // catch the bot error
     console.log('Something went wrong', err);
@@ -20,7 +20,7 @@ const botInit = (bot, stage) => {
   bot.command('is_running',
     (ctx) => (isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`)) || deleteMessage(ctx));
   bot.command('fresh_air',
-    (ctx) => (isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(process.env.FILE_ID)) || deleteMessage(ctx));
+    (ctx) => (isAdmin(ctx) && ctx.replyWithPhoto(process.env.FILE_ID)) || deleteMessage(ctx));
   bot.command('setup',
     (ctx) => (isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option')) || deleteMessage(ctx));
   bot.command('run', (ctx) => {
@@ -60,8 +60,8 @@ const botInit = (bot, stage) => {
     if (isAdmin(ctx)) {
       if (data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
-        botNotify(currentTasks.notify, 'stop');
-        cleanTasks(currentTasks);
+        botNotify(currentTasks.notify, 'destroy');
+        delete currentTasks.notify;
         ctx.reply('Bot has been Stopped!');
       } else {
         ctx.reply('The bot is not running yet!');
@@ -74,13 +74,6 @@ const botInit = (bot, stage) => {
   bot.use(session());
   bot.use(stage.middleware());
   bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
-/*   bot.use((ctx, next) => { // Works when I send some post request to my app. Should be for local session
-    ctx.session.config = {};
-    ctx.session.config.isRunning = data.config.isRunning;
-    ctx.session.config.time = data.config.time;
-    console.log('ctx.session.config', ctx.session.config);
-    next();
-  }); */
 };
 
 module.exports = botInit;
