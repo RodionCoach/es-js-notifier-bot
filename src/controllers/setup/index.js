@@ -8,6 +8,8 @@ require('dotenv').config();
 
 const botInit = (bot, stage) => {
   const currentTasks = {};
+
+  const cleanTasks = (tasks) => { for (const i in tasks) { if (tasks.i) { delete tasks[i]; } } };
   initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_RUNNING);
   bot.catch((err) => { // catch the bot error
     console.log('Something went wrong', err);
@@ -21,14 +23,14 @@ const botInit = (bot, stage) => {
     (ctx) => (isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(process.env.FILE_ID)) || deleteMessage(ctx));
   bot.command('setup',
     (ctx) => (isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option')) || deleteMessage(ctx));
-  bot.command('run', async (ctx) => {
+  bot.command('run', (ctx) => {
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notify) {
-          currentTasks.notify = await scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
+          currentTasks.notify = scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
         }
-        await botNotify(currentTasks.notify, 'start');
+        botNotify(currentTasks.notify, 'start');
         ctx.reply('Bot started!');
       } else {
         ctx.reply('The bot is running already!');
@@ -37,15 +39,15 @@ const botInit = (bot, stage) => {
       deleteMessage(ctx);
     }
   });
-  bot.command('run_default', async (ctx) => {
+  bot.command('run_default', (ctx) => {
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         initConfig(process.env.BOT_OCCUR_TIME);
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notify) {
-          currentTasks.notify = await scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
+          currentTasks.notify = scheduleInit(ctx.replyWithPhoto, process.env.FILE_ID);
         }
-        await botNotify(currentTasks.notify, 'start');
+        botNotify(currentTasks.notify, 'start');
         ctx.reply('Bot started!');
       } else {
         ctx.reply('The bot is running already!');
@@ -59,6 +61,7 @@ const botInit = (bot, stage) => {
       if (data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
         botNotify(currentTasks.notify, 'stop');
+        cleanTasks(currentTasks);
         ctx.reply('Bot has been Stopped!');
       } else {
         ctx.reply('The bot is not running yet!');
