@@ -1,5 +1,5 @@
 {
-  "name": "heroku",
+  "name": "es-js-notifier-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "engines": {
     "node": "10.16.3"
   },
-  "repository": "https://github.com/RodionCoach/es-js-notifier-bot-heroku.git",
+  "repository": "https://github.com/RodionCoach/es-js-notifier-bot.git",
   "author": "Rodion <rodion.kochetkov@effective-soft.com>",
   "license": "MIT",
   "private": true,
