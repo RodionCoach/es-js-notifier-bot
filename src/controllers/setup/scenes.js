@@ -1,6 +1,6 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const cron = require('node-cron');
-const { isAdmin } = require('../functions/index');
+const { isAdmin, deleteMessage } = require('../functions/index');
 const { data } = require('../../bot_config');
 const { keqboardCancel } = require('./markup');
 require('dotenv').config();
@@ -19,11 +19,12 @@ const setTimeScene = new WizardScene('setTime',
       ctx.reply('Setup has been cancelled');
       return ctx.scene.leave();
     }
+    deleteMessage(ctx);
     if (cron.validate(message)) {
       data.config.time = message;
       await ctx.reply(`Done!\nBot occur time is ${message}`);
-      ctx.reply('Please type end of pause');
-      return ctx.scene.next();
+      keqboardCancel(ctx, 'Please type pause time\n in cron format: * * * * *');
+      return ctx.wizard.next();
     }
     ctx.reply('Sorry! Bad format, try again');
     ctx.wizard.back(); // set the listener to the previous function
@@ -36,11 +37,12 @@ const setTimeScene = new WizardScene('setTime',
     const message = (ctx.message && ctx.message.text) || ''; // cancellation check
     if (!message) {
       ctx.reply('Setup has been cancelled');
-      return ctx.scene.next();
+      return ctx.scene.leave();
     }
+    deleteMessage(ctx);
     if (cron.validate(message)) {
       data.config.pauseTime = message;
-      ctx.reply(`Done!\nBot occur time is ${message}`);
+      ctx.reply(`Done!\n pause time is ${message}`);
       return ctx.scene.leave();
     }
     ctx.reply('Sorry! Bad format, try again');

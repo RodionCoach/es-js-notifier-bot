@@ -15,48 +15,51 @@ const botInit = (bot, stage) => {
     console.log('Something went wrong', err);
   });
   bot.settings(
-    (ctx) => isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify(data.config)}`) && deleteMessage(ctx),
+    (ctx) => deleteMessage(ctx) && isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify(data.config)}`),
   );
   bot.command('is_running',
-    (ctx) => isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`) && deleteMessage(ctx));
+    (ctx) => deleteMessage(ctx) && isAdmin(ctx) && ctx.reply(`bot is running: ${data.config.isRunning}`));
   bot.command('fresh_air',
-    (ctx) => isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(data.imgs.needAir) && deleteMessage(ctx));
+    (ctx) => deleteMessage(ctx) && isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(data.imgs.needAir));
   bot.command('setup',
-    (ctx) => isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option') && deleteMessage(ctx));
+    (ctx) => deleteMessage(ctx) && isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option'));
   bot.command('run', async (ctx) => {
+    await deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
-          currentTasks.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          currentTasks.notifyPause = await scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
+          currentTasks.notifyBack = await scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
         }
-        botNotify(currentTasks.notify, 'start');
+        botNotify(currentTasks.notifyPause, 'start');
+        botNotify(currentTasks.notifyBack, 'start');
         ctx.reply('Bot started!');
       } else {
         ctx.reply('The bot is running already!');
       }
     }
-    deleteMessage(ctx);
   });
-  bot.command('run_default', (ctx) => {
+  bot.command('run_default', async (ctx) => {
+    await deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_PAUSE_TIME);
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
-          currentTasks.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          currentTasks.notifyPause = await scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
+          currentTasks.notifyBack = await scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
         }
         botNotify(currentTasks.notifyPause, 'start');
+        botNotify(currentTasks.notifyBack, 'start');
         ctx.reply('Bot started!');
       } else {
         ctx.reply('The bot is running already!');
       }
     }
-    deleteMessage(ctx);
   });
   bot.command('stop', (ctx) => {
+    deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
@@ -69,7 +72,6 @@ const botInit = (bot, stage) => {
         ctx.reply('The bot is not running yet!');
       }
     }
-    deleteMessage(ctx);
   });
 
   bot.use(session());
