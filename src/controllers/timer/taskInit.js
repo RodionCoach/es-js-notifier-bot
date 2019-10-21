@@ -1,8 +1,7 @@
 const cron = require('node-cron');
-const { data } = require('../../bot_config');
 require('dotenv').config();
 
-const scheduleInit = (task, ...rest) => cron.schedule(`${data.config.time}`,
+const scheduleInit = (task, time, ...rest) => cron.schedule(`${time}`,
   () => {
     task(...rest);
   }, {

@@ -11,10 +11,4 @@ const adminConfigurations = (bot) => {
   });
 };
 
-const deleteMessage = async (ctx) => {
-  await ctx.deleteMessage(ctx.message.message_id);
-};
-
-const isAdmin = (ctx) => process.env.ADMIN_CHAT_ID.includes(`${ctx.from.id}`);
-
-module.exports = { adminConfigurations, deleteMessage, isAdmin };
+module.exports = { adminConfigurations };
