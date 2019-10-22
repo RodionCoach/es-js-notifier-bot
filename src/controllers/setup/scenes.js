@@ -23,10 +23,10 @@ const setTimeScene = new WizardScene('setTime',
     if (cron.validate(message)) {
       data.config.time = message;
       await ctx.reply(`Done!\nBot occur time is ${message}`);
-      keqboardCancel(ctx, 'Please type pause time\n in cron format: * * * * *');
+      keqboardCancel(ctx, 'Please type pause time\nin cron format: * * * * *');
       return ctx.wizard.next();
     }
-    ctx.reply('Sorry! Bad format, try again');
+    ctx.reply('Sorry!\nBad format, try again');
     ctx.wizard.back(); // set the listener to the previous function
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   },
@@ -42,10 +42,10 @@ const setTimeScene = new WizardScene('setTime',
     deleteMessage(ctx);
     if (cron.validate(message)) {
       data.config.pauseTime = message;
-      ctx.reply(`Done!\n pause time is ${message}`);
+      ctx.reply(`Done!\nPause time is ${message}`);
       return ctx.scene.leave();
     }
-    ctx.reply('Sorry! Bad format, try again');
+    ctx.reply('Sorry!\nBad format, try again');
     ctx.wizard.back(); // set the listener to the previous function
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   });
