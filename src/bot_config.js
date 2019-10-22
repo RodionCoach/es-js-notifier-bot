@@ -14,7 +14,7 @@ const data = {
 
 const initConfig = (time, pauseTime, isRunning, ...rest) => {
   data.config.time = time;
-  data.config.time = pauseTime;
+  data.config.pauseTime = pauseTime;
   data.config.isRunning = (isRunning === 'true' && true) || false;
   console.log('Bot setup by default', rest);
 };

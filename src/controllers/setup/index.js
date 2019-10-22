@@ -30,7 +30,7 @@ const botInit = (bot, stage) => {
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
           currentTasks.notifyPause = await scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = await scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          currentTasks.notifyBack = await (ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
         }
         botNotify(currentTasks.notifyPause, 'start');
         botNotify(currentTasks.notifyBack, 'start');
@@ -58,8 +58,8 @@ const botInit = (bot, stage) => {
       }
     }
   });
-  bot.command('stop', (ctx) => {
-    deleteMessage(ctx);
+  bot.command('stop', async (ctx) => {
+    await deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
