@@ -77,6 +77,7 @@ const botInit = (bot, stage) => {
   bot.use(session());
   bot.use(stage.middleware());
   bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
+  bot.action('setPauseTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setPauseTime'));
 };
 
 module.exports = botInit;

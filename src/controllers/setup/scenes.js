@@ -29,6 +29,12 @@ const setTimeScene = new WizardScene('setTime',
     ctx.reply('Sorry!\nBad format, try again');
     ctx.wizard.back(); // set the listener to the previous function
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
+  });
+
+const setPauseTimeScene = new WizardScene('setPauseTime',
+  (ctx) => {
+    keqboardCancel(ctx, 'Please type cron format pause time: * * * * *');
+    return ctx.wizard.next();
   },
   (ctx) => {
     if (!isAdmin(ctx)) {
@@ -50,5 +56,5 @@ const setTimeScene = new WizardScene('setTime',
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   });
 
-module.exports = { setTimeScene };
+module.exports = { setTimeScene, setPauseTimeScene };
 
