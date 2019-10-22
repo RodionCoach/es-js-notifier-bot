@@ -23,14 +23,14 @@ const botInit = (bot, stage) => {
     (ctx) => deleteMessage(ctx) && isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(data.imgs.needAir));
   bot.command('setup',
     (ctx) => deleteMessage(ctx) && isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option'));
-  bot.command('run', async (ctx) => {
-    await deleteMessage(ctx);
+  bot.command('run', (ctx) => {
+    deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
-          currentTasks.notifyPause = await scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = await (ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          currentTasks.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
+          currentTasks.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
         }
         botNotify(currentTasks.notifyPause, 'start');
         botNotify(currentTasks.notifyBack, 'start');
@@ -40,15 +40,15 @@ const botInit = (bot, stage) => {
       }
     }
   });
-  bot.command('run_default', async (ctx) => {
-    await deleteMessage(ctx);
+  bot.command('run_default', (ctx) => {
+    deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_PAUSE_TIME);
         data.config.isRunning = !data.config.isRunning;
         if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
-          currentTasks.notifyPause = await scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = await scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          currentTasks.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
+          currentTasks.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
         }
         botNotify(currentTasks.notifyPause, 'start');
         botNotify(currentTasks.notifyBack, 'start');
@@ -58,8 +58,8 @@ const botInit = (bot, stage) => {
       }
     }
   });
-  bot.command('stop', async (ctx) => {
-    await deleteMessage(ctx);
+  bot.command('stop', (ctx) => {
+    deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
