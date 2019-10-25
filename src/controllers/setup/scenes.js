@@ -23,8 +23,7 @@ const setTimeScene = new WizardScene('setTime',
     if (cron.validate(message)) {
       data.config.time = message;
       await ctx.reply(`Done!\nBot occur time is ${message}`);
-      keqboardCancel(ctx, 'Please type pause time\nin cron format: * * * * *');
-      return ctx.wizard.next();
+      return ctx.scene.leave();
     }
     ctx.reply('Sorry!\nBad format, try again');
     ctx.wizard.back(); // set the listener to the previous function
