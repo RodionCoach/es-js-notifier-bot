@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const health = require('koa-ping');
 const koaBody = require('koa-body');
 const bot = require('./telegram');
 require('dotenv').config();
@@ -7,6 +8,7 @@ if (process.env.ENV === 'prod') {
   console.log(process.env.ENV);
   bot.telegram.setWebhook(process.env.WEBHOOK_PATH);
   const app = new Koa();
+  app.use(health());
   app.use(koaBody());
   app.use((ctx, next) => (ctx.method === 'POST' || ctx.url === '/'
     ? bot.handleUpdate(ctx.request.body, ctx.response)

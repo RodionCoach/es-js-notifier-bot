@@ -31,6 +31,7 @@
     "dotenv": "^8.2.0",
     "koa": "^2.10.0",
     "koa-body": "^4.1.1",
+    "koa-ping": "^0.1.1",
     "node-cron": "^2.0.3",
     "telegraf": "^3.33.0",
     "telegraf-session-local": "^1.0.2"
