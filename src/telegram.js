@@ -6,7 +6,7 @@ const { setTimeScene, setPauseTimeScene } = require('./controllers/setup/scenes'
 require('dotenv').config();
 
 const emitter = new EventEmitter();
-const bot = new Telegraf(process.env.BOT_TOKEN, { username: 'ES_JS_notifier_dev_bot' });
+const bot = new Telegraf(process.env.BOT_TOKEN, { username: process.env.BOT_NAME });
 const stage = new Stage([setTimeScene, setPauseTimeScene]);
 
 botInit(bot, stage);
