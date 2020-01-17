@@ -4,7 +4,10 @@ const data = {
   config: {
     time: null,
     pauseTime: null,
-    isRunning: null,
+    clearTime: null,
+    botReply: false,
+    isRunning: false,
+    botMessagesId: [],
   },
   imgs: {
     needAir: process.env.FILE_ID.split(', ')[0],
@@ -12,9 +15,13 @@ const data = {
   },
 };
 
-const initConfig = (time, pauseTime, isRunning, ...rest) => {
+const initConfig = ({
+  time = null, pauseTime = null, isRunning = false, clearTime = null, botReply = false, ...rest
+}) => {
   data.config.time = time;
   data.config.pauseTime = pauseTime;
+  data.config.clearTime = clearTime;
+  data.config.botReply = (botReply === 'true' && true) || false;
   data.config.isRunning = (isRunning === 'true' && true) || false;
   console.log('Bot setup by default', rest);
 };

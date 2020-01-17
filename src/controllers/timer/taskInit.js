@@ -1,9 +1,9 @@
 const cron = require('node-cron');
 require('dotenv').config();
 
-const scheduleInit = (task, time, ...rest) => cron.schedule(`${time}`,
+const scheduleInit = (task = () => {}, time = '*****', ...rest) => cron.schedule(`${time}`,
   () => {
-    task(...rest);
+    task(rest); // probably need spread
   }, {
     scheduled: false,
     timezone: process.env.TIME_ZONE,

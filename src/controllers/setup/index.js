@@ -1,16 +1,22 @@
 const session = require('telegraf/session');
 const scheduleInit = require('../timer/taskInit');
 const { keqboardChoice } = require('./markup');
-const { isAdmin, deleteMessage } = require('../functions/index');
+const { isAdmin, deleteMessage, deleteBotMessages } = require('../functions/index');
 const { data, initConfig } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
 require('dotenv').config();
 
 const botInit = (bot, stage) => {
-  const currentTasks = {};
+  const tasksPool = {};
 
   // const cleanTasks = (tasks) => { for (const i in tasks) { if (tasks.i) { delete tasks[i]; } } };
-  initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_PAUSE_TIME, process.env.BOT_RUNNING);
+  initConfig({
+    time: process.env.BOT_OCCUR_TIME,
+    pauseTime: process.env.BOT_PAUSE_TIME,
+    clearTime: process.env.BOT_CLEAR_TIME,
+    botReply: process.env.BOT_REPLY_MESSAGES,
+    isRunning: process.env.BOT_RUNNING,
+  });
   bot.catch((err) => { // catch the bot error
     console.log('Something went wrong', err);
   });
@@ -23,39 +29,40 @@ const botInit = (bot, stage) => {
     (ctx) => deleteMessage(ctx) && isAdmin(ctx) && !data.config.isRunning && ctx.replyWithPhoto(data.imgs.needAir));
   bot.command('setup',
     (ctx) => deleteMessage(ctx) && isAdmin(ctx) && !data.config.isRunning && keqboardChoice(ctx, 'Please choise the option'));
+  bot.command('clear_bot_messages',
+    (ctx) => deleteMessage(ctx) && deleteBotMessages(ctx));
   bot.command('run', (ctx) => {
     deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
-        if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
-          currentTasks.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+        if (!tasksPool.notifyPause && !tasksPool.notifyBack) {
+          tasksPool.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
+          tasksPool.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          tasksPool.clearBotMessages = scheduleInit(ctx.replyWithPhoto, data.config.clearTime);
         }
-        botNotify(currentTasks.notifyPause, 'start');
-        botNotify(currentTasks.notifyBack, 'start');
-        ctx.reply('Bot started!');
-      } else {
-        ctx.reply('The bot is running already!');
-      }
+        botNotify(tasksPool.notifyPause, 'start');
+        botNotify(tasksPool.notifyBack, 'start');
+        if (data.config.botReply) ctx.reply('Bot started!');
+      } else if (data.config.botReply) ctx.reply('The bot is running already!');
     }
   });
   bot.command('run_default', (ctx) => {
     deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
-        initConfig(process.env.BOT_OCCUR_TIME, process.env.BOT_PAUSE_TIME);
-        data.config.isRunning = !data.config.isRunning;
-        if (!currentTasks.notifyPause && !currentTasks.notifyBack) {
-          currentTasks.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
-          currentTasks.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+        initConfig({
+          time: process.env.BOT_OCCUR_TIME, pauseTime: process.env.BOT_PAUSE_TIME, clearTime: process.env.BOT_CLEAR_TIME, botReply: true, isRunning: true,
+        });
+        if (!tasksPool.notifyPause && !tasksPool.notifyBack) {
+          tasksPool.notifyPause = scheduleInit(ctx.replyWithPhoto, data.config.time, data.imgs.needAir);
+          tasksPool.notifyBack = scheduleInit(ctx.replyWithPhoto, data.config.pauseTime, data.imgs.needJS);
+          tasksPool.clearBotMessages = scheduleInit(deleteBotMessages, data.config.clearTime, ctx);
         }
-        botNotify(currentTasks.notifyPause, 'start');
-        botNotify(currentTasks.notifyBack, 'start');
-        ctx.reply('Bot started!');
-      } else {
-        ctx.reply('The bot is running already!');
-      }
+        botNotify(tasksPool.notifyPause, 'start');
+        botNotify(tasksPool.notifyBack, 'start');
+        if (data.config.botReply) ctx.reply('Bot started by default!');
+      } else if (data.config.botReply) ctx.reply('The bot is running already!');
     }
   });
   bot.command('stop', (ctx) => {
@@ -63,14 +70,13 @@ const botInit = (bot, stage) => {
     if (isAdmin(ctx)) {
       if (data.config.isRunning) {
         data.config.isRunning = !data.config.isRunning;
-        botNotify(currentTasks.notifyPause, 'destroy');
-        botNotify(currentTasks.notifyBack, 'destroy');
-        delete currentTasks.notifyPause;
-        delete currentTasks.notifyBack;
-        ctx.reply('Bot has been Stopped!');
-      } else {
-        ctx.reply('The bot is not running yet!');
-      }
+        botNotify(tasksPool.notifyPause, 'destroy');
+        botNotify(tasksPool.notifyBack, 'destroy');
+        delete tasksPool.notifyPause;
+        delete tasksPool.notifyBack;
+        delete tasksPool.clearBotMessages;
+        if (data.config.botReply) ctx.reply('Bot has been Stopped!');
+      } else if (data.config.botReply) ctx.reply('The bot is not running yet!');
     }
   });
 
@@ -78,6 +84,8 @@ const botInit = (bot, stage) => {
   bot.use(stage.middleware());
   bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
   bot.action('setPauseTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setPauseTime'));
+
+  bot.on('text', (ctx) => console.log('onMessage', ctx.getChat().then((res) => res)));
 };
 
 module.exports = botInit;
