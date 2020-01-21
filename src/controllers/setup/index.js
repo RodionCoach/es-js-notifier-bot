@@ -85,7 +85,7 @@ const botInit = (bot, stage) => {
   bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
   bot.action('setPauseTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setPauseTime'));
 
-  bot.on('text', (ctx) => console.log('onMessage', ctx.getChat().then((res) => res)));
+  bot.on('text', async () => console.log(data.botId));
 };
 
 module.exports = botInit;

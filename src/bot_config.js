@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const data = {
   config: {
+    botId: null,
     time: null,
     pauseTime: null,
     clearTime: null,
