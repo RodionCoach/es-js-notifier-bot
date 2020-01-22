@@ -10,7 +10,7 @@ const deleteBotsMessages = async ({ dataConfig = [], ctx }) => {
       dataConfig.splice(i);
     }
   });
-  data.config.botsMessages = dataConfig;
+  data.config.botsMessagesIds = dataConfig;
 };
 
 module.exports = deleteBotsMessages;
