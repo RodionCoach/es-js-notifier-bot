@@ -16,16 +16,16 @@ const setTimeScene = new WizardScene('setTime',
     }
     const message = (ctx.message && ctx.message.text) || ''; // cancellation check
     if (!message) {
-      ctx.reply('Setup has been cancelled');
+      ctx.reply('Setup has been cancelled').then((res) => data.config.botsMessages.pushTo(ctx, res.message_id));
       return ctx.scene.leave();
     }
     deleteMessage(ctx);
     if (cron.validate(message)) {
       data.config.time = message;
-      await ctx.reply(`Done!\nBot occur time is ${message}`);
+      await ctx.reply(`Done!\nBot occur time is ${message}`).then((res) => data.config.botsMessages.pushTo(ctx, res.message_id));
       return ctx.scene.leave();
     }
-    ctx.reply('Sorry!\nBad format, try again');
+    ctx.reply('Sorry!\nBad format, try again').then((res) => data.config.botsMessages.pushTo(ctx, res.message_id));
     ctx.wizard.back(); // set the listener to the previous function
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   });
@@ -41,16 +41,16 @@ const setPauseTimeScene = new WizardScene('setPauseTime',
     }
     const message = (ctx.message && ctx.message.text) || ''; // cancellation check
     if (!message) {
-      ctx.reply('Setup has been cancelled');
+      ctx.reply('Setup has been cancelled').then((res) => data.config.botsMessages.pushTo(ctx, res.message_id));
       return ctx.scene.leave();
     }
     deleteMessage(ctx);
     if (cron.validate(message)) {
       data.config.pauseTime = message;
-      ctx.reply(`Done!\nPause time is ${message}`);
+      ctx.reply(`Done!\nPause time is ${message}`).then((res) => data.config.botsMessages.pushTo(ctx, res.message_id));
       return ctx.scene.leave();
     }
-    ctx.reply('Sorry!\nBad format, try again');
+    ctx.reply('Sorry!\nBad format, try again').then((res) => data.config.botsMessages.pushTo(ctx, res.message_id));
     ctx.wizard.back(); // set the listener to the previous function
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   });

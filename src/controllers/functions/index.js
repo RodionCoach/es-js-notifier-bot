@@ -1,6 +1,9 @@
 const isAdmin = require('./isAdmin');
 const deleteMessage = require('./deleteMessage');
-const deleteBotMessages = require('./deleteBotMessages');
+const deleteBotsMessages = require('./deleteBotsMessages');
+const sendPhoto = require('./sendPhoto');
 
-module.exports = { isAdmin, deleteMessage, deleteBotMessages };
+module.exports = {
+  isAdmin, deleteMessage, deleteBotsMessages, sendPhoto,
+};
 
