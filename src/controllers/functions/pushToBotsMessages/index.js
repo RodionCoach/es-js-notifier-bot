@@ -1,16 +1,18 @@
+const { setBotConfig } = require('../../functions/index');
 const { data } = require('../../../bot_config');
 
 const pushToBotsMessages = (messageId) => {
-  if (data.botsMessagesIds.length === data.botsMessagesAmount) {
-    if (data.botMessagesPointer === data.botsMessagesIds.length) {
-      data.botMessagesPointer = 0;
+  if (data.config.botsMessagesIds.length === data.config.botsMessagesAmount) {
+    if (data.config.botMessagesPointer === data.config.botsMessagesIds.length) {
+      setBotConfig({ propertyName: 'botMessagesPointer', value: 0 });
     }
-    data.botsMessagesIds[data.botMessagesPointer] = messageId;
-    data.botsMessagesIds.push(messageId);
-    data.botMessagesPointer += data.botMessagesPointer;
+
+    setBotConfig({ value: () => { data.config.botsMessagesIds[data.config.botMessagesPointer] = messageId; } });
+    setBotConfig({ propertyName: 'botMessagesPointer', value: data.config.botMessagesPointer + 1 });
 
     return;
   }
+
   data.botsMessagesIds.push(messageId);
 };
 

@@ -1,25 +1,25 @@
 const session = require('telegraf/session');
+const Telegram = require('telegraf/telegram');
 const scheduleInit = require('../timer/taskInit');
 const { keqboardChoice } = require('./markup');
 const {
-  isAdmin, deleteMessage, deleteBotsMessages, sendPhoto, pushToBotsMessages,
+  isAdmin, deleteMessage, deleteBotsMessages, sendPhoto, pushToBotsMessages, setBotConfig,
 } = require('../functions/index');
 const { data, initConfig } = require('../../bot_config');
 const { botNotify } = require('../timer/index');
 require('dotenv').config();
 
-const botInit = (bot, stage) => {
+const botInit = async (bot, stage) => {
   const tasksPool = {};
 
   // const cleanTasks = (tasks) => { for (const i in tasks) { if (tasks.i) { delete tasks[i]; } } };
-  initConfig({
-    time: process.env.BOT_OCCUR_TIME,
-    pauseTime: process.env.BOT_PAUSE_TIME,
-    clearTime: process.env.BOT_CLEAR_TIME,
-    botReply: process.env.BOT_REPLY_MESSAGES,
-    isRunning: process.env.BOT_RUNNING,
-  });
-  bot.catch((err) => { // catch the bot error
+  const telegram = new Telegram(process.env.BOT_TOKEN, { username: process.env.BOT_NAME });
+  const result = await telegram.getMe().catch((error) => error);
+  setBotConfig({ propertyName: 'botId', value: result.id });
+
+  initConfig({});
+
+  bot.catch((err) => { // catch the bots error
     console.log('Something went wrong', err);
   });
   bot.settings(
@@ -39,7 +39,7 @@ const botInit = (bot, stage) => {
     deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (!data.config.isRunning) {
-        data.config.isRunning = !data.config.isRunning;
+        setBotConfig({ propertyName: 'isRunning', value: !data.config.isRunning });
         if (!tasksPool.notifyPause && !tasksPool.notifyBack) {
           tasksPool.notifyPause = scheduleInit(sendPhoto, data.config.time, { photoId: data.imgs.needAir, ctx });
           tasksPool.notifyBack = scheduleInit(sendPhoto, data.config.pauseTime, { photoId: data.imgs.needJS, ctx });
@@ -77,7 +77,7 @@ const botInit = (bot, stage) => {
     deleteMessage(ctx);
     if (isAdmin(ctx)) {
       if (data.config.isRunning) {
-        data.config.isRunning = !data.config.isRunning;
+        setBotConfig({ propertyName: 'isRunning', value: !data.config.isRunning });
         botNotify(tasksPool.notifyPause, 'destroy');
         botNotify(tasksPool.notifyBack, 'destroy');
         botNotify(tasksPool.clearBotMessages, 'destroy');

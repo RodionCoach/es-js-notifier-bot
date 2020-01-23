@@ -1,4 +1,4 @@
-const { data } = require('../../../bot_config');
+const { setBotConfig } = require('../../functions/index');
 
 const deleteBotsMessages = async ({ dataConfig = [], ctx }) => {
   dataConfig.forEach(async (item, i) => {
@@ -10,7 +10,8 @@ const deleteBotsMessages = async ({ dataConfig = [], ctx }) => {
       dataConfig.splice(i);
     }
   });
-  data.config.botsMessagesIds = dataConfig;
+
+  setBotConfig({ propertyName: 'botsMessagesIds', value: dataConfig });
 };
 
 module.exports = deleteBotsMessages;
