@@ -2,7 +2,7 @@ const { setBotConfig } = require('../../functions/index');
 const { data } = require('../../../bot_config');
 
 const pushToBotsMessages = (messageId) => {
-  if (data.config.botsMessagesIds.length === data.config.botsMessagesAmount) {
+  if (data.config.botsMessagesIds.length === data.config.botsMessagesBufferSize) {
     if (data.config.botMessagesPointer === data.config.botsMessagesIds.length) {
       setBotConfig({ propertyName: 'botMessagesPointer', value: 0 });
     }
