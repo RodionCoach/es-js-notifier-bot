@@ -1,8 +1,6 @@
-const { pushToBotsMessages } = require('../../functions/index');
+const { pushToBotsMessages } = require('../pushToBotsMessages');
 
-const sendPhoto = async ({ photoId, ctx }) => {
-  const result = await ctx.replyWithPhoto(photoId);
-  pushToBotsMessages(result.message_id);
-};
+const sendPhoto = ({ photoId, ctx }) => ctx.replyWithPhoto(photoId)
+  .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.log(`Something went wrong on bot reply - ${error}`));
 
 module.exports = sendPhoto;

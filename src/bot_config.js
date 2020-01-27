@@ -13,6 +13,7 @@ const data = {
     botsMessagesBufferSize: null,
     botMessagesPointer: null,
     botsMessagesIds: null,
+    currentCtx: null,
   },
   imgs: {
     needAir: process.env.FILE_ID.split(', ')[0],
@@ -24,7 +25,7 @@ const saveBotConfig = () => {
   try {
     fs.writeFile('botconfig.json', JSON.stringify(data), (err) => {
       if (err) throw err;
-      console.log('Configs data has been replaced!');
+      console.log('Config`s data has been replaced!');
     });
   } catch (error) {
     console.log(`Error file writing - ${error}`);
@@ -54,6 +55,7 @@ const initConfig = ({
   botsMessagesIds = null,
   clearTime = null,
   botReply = false,
+  currentCtx = null,
   ...rest
 }) => {
   const contents = readBotConfig();
@@ -64,10 +66,11 @@ const initConfig = ({
   data.config.clearTime = clearTime || contents.config.clearTime || process.env.BOT_CLEAR_TIME;
   data.config.botsMessagesBufferSize = botsMessagesBufferSize || contents.config.botsMessagesBufferSize || process.env.BOT_MESSAGES_AMOUNT;
   data.config.botMessagesPointer = botMessagesPointer !== null ? botMessagesPointer : contents.config.botMessagesPointer;
-  data.config.botsMessagesIds = botsMessagesIds || contents.config.botsMessagesIds;
+  data.config.botsMessagesIds = botsMessagesIds || contents.config.botsMessagesIds || [];
   data.config.botReply = botReply || contents.config.botReply || false;
   data.config.isRunning = isRunning || contents.config.isRunning || false;
   data.config.runningByDefault = runningByDefault || contents.config.runningByDefault || false;
+  data.config.currentCtx = currentCtx || contents.config.currentCtx;
 
   saveBotConfig();
   console.log('Bot setup by default', rest);

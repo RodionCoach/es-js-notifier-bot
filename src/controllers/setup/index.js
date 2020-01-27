@@ -6,7 +6,15 @@ const {
 const { initConfig } = require('../../bot_config');
 require('dotenv').config();
 const {
-  botClearMessages, botIsRunning, botSetup, botNotifyFreshAir, botSettings, botRun, botRunByDefault, botStop,
+  botClearMessages,
+  botIsRunning,
+  botSetup,
+  botNotifyFreshAir,
+  botSettings,
+  botRun,
+  botRunByDefault,
+  botStop,
+  botReply,
 } = require('../functions/commands');
 
 const botInit = async (bot, stage) => {
@@ -17,6 +25,7 @@ const botInit = async (bot, stage) => {
   const result = await telegram.getMe().catch((error) => error);
 
   initConfig({ botId: result.id });
+  botRestoreSettings(tasksPool);
 
   bot.catch((err) => { // catch the bots error
     console.log('Something went wrong', err);
@@ -24,6 +33,7 @@ const botInit = async (bot, stage) => {
   bot.settings(botSettings);
   bot.command('is_running', botIsRunning);
   bot.command('fresh_air', botNotifyFreshAir);
+  bot.command('allow_reply', (ctx) => botReply(ctx));
   bot.command('setup', botSetup);
   bot.command('clear_bot_messages', botClearMessages);
   bot.command('run', (ctx) => botRun(ctx, tasksPool));
@@ -32,7 +42,6 @@ const botInit = async (bot, stage) => {
 
   bot.use(session());
   bot.use(stage.middleware());
-  bot.use((ctx) => botRestoreSettings(ctx, tasksPool));
 
   bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
   bot.action('setPauseTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setPauseTime'));

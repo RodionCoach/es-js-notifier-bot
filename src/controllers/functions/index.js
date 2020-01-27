@@ -1,12 +1,18 @@
 const isAdmin = require('./isAdmin');
+const pushToBotsMessages = require('./pushToBotsMessages');
 const deleteMessage = require('./deleteMessage');
 const deleteBotsMessages = require('./deleteBotsMessages');
-const sendPhoto = require('./sendPhoto');
-const pushToBotsMessages = require('./pushToBotsMessages');
 const setBotConfig = require('./setBotConfig');
-const botRestoreSetting = require('./botRestoreSetting');
+const botRestoreSettings = require('./botRestoreSettings');
+const isWorkingChat = require('./isWorkingChat');
 
 module.exports = {
-  isAdmin, deleteMessage, deleteBotsMessages, sendPhoto, pushToBotsMessages, setBotConfig, botRestoreSetting,
+  isAdmin,
+  pushToBotsMessages,
+  deleteMessage,
+  deleteBotsMessages,
+  setBotConfig,
+  botRestoreSettings,
+  isWorkingChat,
 };
 

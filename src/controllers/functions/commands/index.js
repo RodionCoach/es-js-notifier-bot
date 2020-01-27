@@ -6,7 +6,16 @@ const botNotifyFreshAir = require('./botNotify');
 const botRun = require('./botRun');
 const botRunByDefault = require('./botRunByDefault');
 const botStop = require('./botStop');
+const botReply = require('./botReply');
 
 module.exports = {
-  botClearMessages, botIsRunning, botSetup, botNotifyFreshAir, botSettings, botRun, botRunByDefault, botStop,
+  botClearMessages,
+  botIsRunning,
+  botSetup,
+  botNotifyFreshAir,
+  botSettings,
+  botRun,
+  botRunByDefault,
+  botStop,
+  botReply,
 };

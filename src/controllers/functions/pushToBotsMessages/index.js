@@ -13,7 +13,7 @@ const pushToBotsMessages = (messageId) => {
     return;
   }
 
-  data.botsMessagesIds.push(messageId);
+  data.config.botsMessagesIds.push(messageId);
 };
 
 module.exports = pushToBotsMessages;

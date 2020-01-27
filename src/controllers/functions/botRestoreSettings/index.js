@@ -5,7 +5,10 @@ const { data } = require('../../../bot_config');
 const { botNotify } = require('../../timer/index');
 const scheduleInit = require('../../timer/taskInit');
 
-const botRestoreSetting = (ctx, tasksPool) => {
+const botRestoreSettings = (tasksPool) => {
+  const ctx = data.config.currentCtx;
+  if (!ctx) return;
+  console.log('restored ctx', ctx, ctx.update.message.chat.id);
   if (data.config.isRunning) {
     if (data.config.runningByDefault) {
       setBotConfig({
@@ -28,16 +31,18 @@ const botRestoreSetting = (ctx, tasksPool) => {
       botNotify(tasksPool.notifyBack, 'start');
       botNotify(tasksPool.clearBotMessages, 'start');
     }
+
+    if (!tasksPool.notifyPause && !tasksPool.notifyBack) {
+      tasksPool.notifyPause = scheduleInit(sendPhoto, data.config.time, { photoId: data.imgs.needAir, ctx });
+      tasksPool.notifyBack = scheduleInit(sendPhoto, data.config.pauseTime, { photoId: data.imgs.needJS, ctx });
+      tasksPool.clearBotMessages = scheduleInit(deleteBotsMessages, data.config.clearTime,
+        { dataConfig: data.config.botsMessagesIds, ctx });
+    }
+    botNotify(tasksPool.notifyPause, 'start');
+    botNotify(tasksPool.notifyBack, 'start');
+    botNotify(tasksPool.clearBotMessages, 'start');
   }
-  if (!tasksPool.notifyPause && !tasksPool.notifyBack) {
-    tasksPool.notifyPause = scheduleInit(sendPhoto, data.config.time, { photoId: data.imgs.needAir, ctx });
-    tasksPool.notifyBack = scheduleInit(sendPhoto, data.config.pauseTime, { photoId: data.imgs.needJS, ctx });
-    tasksPool.clearBotMessages = scheduleInit(deleteBotsMessages, data.config.clearTime,
-      { dataConfig: data.config.botsMessagesIds, ctx });
-  }
-  botNotify(tasksPool.notifyPause, 'start');
-  botNotify(tasksPool.notifyBack, 'start');
-  botNotify(tasksPool.clearBotMessages, 'start');
+  console.log('Bots settings have been restored');
 };
 
-module.exports = botRestoreSetting;
+module.exports = botRestoreSettings;
