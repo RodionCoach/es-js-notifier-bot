@@ -1,5 +1,5 @@
 const Markup = require('telegraf/markup');
-const { pushToBotsMessages } = require('../functions/index');
+const { pushToBotsMessages } = require('../../bot_config');
 // const Extra = require('telegraf/extra');
 
 const keqboardChoice = (ctx, message) => ctx.reply(message, Markup.inlineKeyboard([

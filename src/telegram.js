@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const Telegraf = require('telegraf');
 const Stage = require('telegraf/stage');
-const botInit = require('./controllers/setup/index');
+const botInit = require('./controllers/setup');
 const {
   setTimeScene, setPauseTimeScene, setClearTimeScene, setBotsMessagesBufferSizeScene,
 } = require('./controllers/setup/scenes');

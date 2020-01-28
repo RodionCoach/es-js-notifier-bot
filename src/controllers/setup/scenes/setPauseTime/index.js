@@ -1,8 +1,9 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const cron = require('node-cron');
 const {
-  isAdmin, deleteMessage, pushToBotsMessages, setBotConfig,
-} = require('../../../functions/index');
+  isAdmin, deleteMessage,
+} = require('../../../functions');
+const { setBotConfig, pushToBotsMessages } = require('../../../../bot_config');
 const { keqboardCancel } = require('../../markup');
 require('dotenv').config();
 

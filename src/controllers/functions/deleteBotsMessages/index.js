@@ -1,17 +1,18 @@
-const { setBotConfig } = require('../../functions/index');
+const { data, setBotConfig } = require('../../../bot_config');
 
-const deleteBotsMessages = async ({ dataConfig = [], ctx }) => {
-  dataConfig.forEach(async (item, i) => {
-    try {
-      await ctx.deleteMessage(item);
-      dataConfig.splice(i);
-    } catch (error) {
-      console.log(`Some went wrong by delete bot message with id ${item} - ${error}`);
-      dataConfig.splice(i);
+const deleteBotsMessages = ({ dataConfig = [], ctx = null, telegram = null }) => {
+  if (dataConfig.length === 0 && data.botReply) ctx.reply('there is nothing to delete');
+  dataConfig.forEach((item) => {
+    if (ctx !== null) {
+      ctx.deleteMessage(item)
+        .catch((error) => console.log(`Something went wrong by delete bot message with id ${item} - ${error}`));
+    } else {
+      telegram.deleteMessage(data.config.currentChatId, item)
+        .catch((error) => console.log(`Something went wrong by delete bot message with id ${item} - ${error}`));
     }
   });
 
-  setBotConfig({ propertyName: 'botsMessagesIds', value: dataConfig });
+  setBotConfig({ propertyName: 'botsMessagesIds', value: [] });
 };
 
 module.exports = deleteBotsMessages;

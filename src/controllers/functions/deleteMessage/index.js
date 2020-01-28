@@ -1,5 +1,10 @@
 const deleteMessage = async (ctx) => {
-  await ctx.deleteMessage(ctx.message.message_id);
+  try {
+    await ctx.deleteMessage(ctx.message.message_id);
+  } catch (error) {
+    console.log(`Something went wrong, can't delete your message including bot command - ${error}`);
+  }
+  return true;
 };
 
 module.exports = deleteMessage;
