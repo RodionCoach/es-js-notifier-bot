@@ -4,7 +4,7 @@ require('dotenv').config();
 const data = {
   config: {
     botId: null,
-    currentChatId: null,
+    currentWorkingChatId: null,
     time: null,
     pauseTime: null,
     clearTime: null,
@@ -45,7 +45,7 @@ const readBotConfig = () => {
 
 const initConfig = ({
   botId = null,
-  currentChatId = null,
+  currentWorkingChatId = null,
   time = null,
   pauseTime = null,
   isRunning = null,
@@ -61,7 +61,7 @@ const initConfig = ({
   const contents = readBotConfig();
 
   data.config.botId = botId;
-  data.config.currentChatId = process.env.BOT_WORKING_CHAT_ID || currentChatId || contents.config.currentChatId;
+  data.config.currentWorkingChatId = currentWorkingChatId || contents.config.currentWorkingChatId || process.env.BOT_WORKING_CHAT_ID;
   data.config.time = time || contents.config.time || process.env.BOT_OCCUR_TIME;
   data.config.pauseTime = pauseTime || contents.config.pauseTime || process.env.BOT_PAUSE_TIME;
   data.config.clearTime = clearTime || contents.config.clearTime || process.env.BOT_CLEAR_TIME;
