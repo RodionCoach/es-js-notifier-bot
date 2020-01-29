@@ -1,6 +1,4 @@
 const fs = require('fs');
-const { botNotify, scheduleInit } = require('./controllers/timer');
-const { deleteBotsMessages, sendPhoto } = require('./controllers/functions');
 require('dotenv').config();
 
 const data = {
@@ -26,10 +24,10 @@ const data = {
 
 const saveBotConfig = () => {
   try {
-    fs.writeFileSync('botconfig.json', JSON.stringify({ ...data }));
-    console.log(`Config's data has been replaced! - [${new Date()}]`);
+    fs.writeFileSync('botconfig.json', JSON.stringify({ ...data, tasksPool: {} }));
+    console.info(`Config's data has been replaced! - [${new Date()}]`);
   } catch (error) {
-    console.log(`Error file writing - ${error}`);
+    console.info(`Error file writing - ${error}`);
   }
 };
 
@@ -39,7 +37,7 @@ const readBotConfig = () => {
 
     return botConfig;
   } catch (error) {
-    console.log(`Error file reading - ${error}`);
+    console.info(`Error file reading - ${error}`);
 
     return data;
   }
@@ -76,10 +74,15 @@ const initConfig = ({
   data.tasksPool = tasksPool || {};
 
   saveBotConfig();
-  console.log('Bot setup by default', rest);
+  console.info('Bot setup by default', rest);
 };
 
 const setBotConfig = ({ params = null, propertyName = '', value = null }) => {
+  if (value === null) {
+    saveBotConfig();
+    return;
+  }
+
   if (typeof value === 'function') {
     value(params);
     saveBotConfig();
@@ -103,43 +106,6 @@ const setBotConfig = ({ params = null, propertyName = '', value = null }) => {
   saveBotConfig();
 };
 
-const botRestoreSettings = (telegram) => {
-  if (data.config.isRunning) {
-    if (data.config.runningByDefault) {
-      setBotConfig({
-        propertyName: 'multiply',
-        value: {
-          time: process.env.BOT_OCCUR_TIME,
-          pauseTime: process.env.BOT_PAUSE_TIME,
-          clearTime: process.env.BOT_CLEAR_TIME,
-          botReply: true,
-          isRunning: true,
-        },
-      });
-    }
-    data.tasksPool.notifyPause = scheduleInit(
-      sendPhoto,
-      data.config.time,
-      { photoId: data.imgs.needAir, telegram },
-    );
-    data.tasksPool.notifyBack = scheduleInit(
-      sendPhoto,
-      data.config.pauseTime,
-      { photoId: data.imgs.needJS, telegram },
-    );
-    data.tasksPool.clearBotMessages = scheduleInit(
-      deleteBotsMessages,
-      data.config.clearTime,
-      { dataConfig: data.config.botsMessagesIds, telegram },
-    );
-    botNotify(data.tasksPool.notifyPause, 'start');
-    botNotify(data.tasksPool.notifyBack, 'start');
-    botNotify(data.tasksPool.clearBotMessages, 'start');
-  }
-
-  console.log('Bots settings have been restored');
-};
-
 const pushToBotsMessages = (messageId) => {
   if (data.config.botsMessagesIds.length - 1 === data.config.botsMessagesBufferSize) {
     if (data.config.botsMessagesIds.length - 1 === data.config.botMessagesPointer) {
@@ -153,6 +119,7 @@ const pushToBotsMessages = (messageId) => {
   }
 
   data.config.botsMessagesIds.push(messageId);
+  setBotConfig({});
 };
 
 module.exports = {
@@ -161,7 +128,6 @@ module.exports = {
   saveBotConfig,
   readBotConfig,
   setBotConfig,
-  botRestoreSettings,
   pushToBotsMessages,
 };
 

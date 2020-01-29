@@ -1,7 +1,8 @@
 const session = require('telegraf/session');
 const Telegram = require('telegraf/telegram');
 const { isAdmin } = require('../functions');
-const { initConfig, botRestoreSettings } = require('../../bot_config');
+const { initConfig } = require('../../bot_config');
+const botRestoreSettings = require('../../config/botRestoreSettings');
 const {
   botClearMessages,
   botIsRunning,
@@ -24,7 +25,7 @@ const botInit = async (bot, stage) => {
   botRestoreSettings(telegram);
 
   bot.catch((err) => { // catch the bots error
-    console.log(`Something went wrong - ${err} : [${new Date()}]`);
+    console.info(`Something went wrong - ${err} : [${new Date()}]`);
   });
 
   bot.settings(botSettings);

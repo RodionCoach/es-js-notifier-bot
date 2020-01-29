@@ -17,13 +17,14 @@ const botStop = (ctx) => {
       delete data.tasksPool.notifyPause;
       delete data.tasksPool.notifyBack;
       delete data.tasksPool.clearBotMessages;
+
       if (data.config.botReply) {
         ctx.reply('Bot has been Stopped!')
-          .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.log(`Something went wrong on bot reply - ${error}`));
+          .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
       }
     } else if (data.config.botReply) {
       ctx.reply('The bot is not running yet!')
-        .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.log(`Something went wrong on bot reply - ${error}`));
+        .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
     }
   }
 };

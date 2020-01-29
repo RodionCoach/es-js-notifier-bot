@@ -20,7 +20,7 @@ const setClearTimeScene = new WizardScene('setClearTime',
     const message = (ctx.message && ctx.message.text) || ''; // cancellation check
     if (!message) {
       ctx.reply('Setup has been cancelled')
-        .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.log(`Something went wrong on bot reply - ${error}`));
+        .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
 
       return ctx.scene.leave();
     }
@@ -28,12 +28,12 @@ const setClearTimeScene = new WizardScene('setClearTime',
     if (cron.validate(message)) {
       setBotConfig({ propertyName: 'clearTime', value: message });
       ctx.reply(`Done!\nClearing time is ${message}`)
-        .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.log(`Something went wrong on bot reply - ${error}`));
+        .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
 
       return ctx.scene.leave();
     }
     ctx.reply('Sorry!\nBad format, try again')
-      .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.log(`Something went wrong on bot reply - ${error}`));
+      .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
     ctx.wizard.back(); // set the listener to the previous function
 
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);

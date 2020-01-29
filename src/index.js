@@ -7,7 +7,7 @@ require('dotenv').config();
   const bot = await telegraf();
 
   if (process.env.ENV === 'prod') {
-    console.log(process.env.ENV);
+    console.info(process.env.ENV);
     bot.telegram.setWebhook(process.env.WEBHOOK_PATH);
     const app = new Koa();
     app.use(koaBody());
@@ -16,7 +16,7 @@ require('dotenv').config();
       : next()));
     app.listen(process.env.PORT);
   } else if (process.env.ENV === 'dev') {
-    console.log(process.env.ENV);
+    console.info(process.env.ENV);
     bot.launch().catch((err) => { throw new Error(err.message); });
   }
 })();
