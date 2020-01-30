@@ -1,5 +1,6 @@
 const {
-  isAdmin, deleteMessage,
+  isAdmin,
+  deleteMessage,
 } = require('../../functions');
 const { data, pushToBotsMessages } = require('../../../bot_config');
 

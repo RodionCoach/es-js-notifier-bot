@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const telegraf = async () => {
   const emitter = new EventEmitter();
-  const bot = new Telegraf(process.env.BOT_TOKEN, { username: process.env.BOT_NAME });
+  const bot = new Telegraf(process.env.BOT_TOKEN);
   const stage = new Stage([setTimeScene, setPauseTimeScene, setClearTimeScene, setBotsMessagesBufferSizeScene]);
 
   await botInit(bot, stage);

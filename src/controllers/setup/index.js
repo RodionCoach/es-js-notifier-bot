@@ -18,8 +18,14 @@ require('dotenv').config();
 
 const botInit = async (bot, stage) => {
   // const cleanTasks = (tasks) => { for (const i in tasks) { if (tasks.i) { delete tasks[i]; } } };
-  const telegram = new Telegram(process.env.BOT_TOKEN, { username: process.env.BOT_NAME });
-  const result = await telegram.getMe().catch((error) => error);
+  const telegram = new Telegram(process.env.BOT_TOKEN, {
+    agent: null,
+    webhookReply: true,
+  });
+  const result = await telegram.getMe().then((botInfo) => {
+    bot.options.username = botInfo.username;
+    return botInfo;
+  }).catch((error) => error);
 
   initConfig({ botId: result.id });
   botRestoreSettings(telegram);
