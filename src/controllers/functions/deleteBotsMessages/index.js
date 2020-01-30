@@ -7,7 +7,7 @@ const deleteBotsMessages = ({ dataConfig = [], ctx = null, telegram = null }) =>
       ctx.deleteMessage(item)
         .catch((error) => console.info(`Something went wrong by delete bot message with id ${item} - ${error}`));
     } else {
-      telegram.deleteMessage(data.config.currentChatId, item)
+      telegram.deleteMessage(data.config.currentWorkingChatId, item)
         .catch((error) => console.info(`Something went wrong by delete bot message with id ${item} - ${error}`));
     }
   });
