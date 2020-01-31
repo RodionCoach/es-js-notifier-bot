@@ -8,12 +8,12 @@ require('dotenv').config();
 
   if (process.env.ENV === 'prod') {
     console.info(process.env.ENV);
-    console.info('Currently port is (one of 443, 80, 88, 8443) - ', process.env.PORT);
+    console.info('Currently port is one of [443, 80, 88, 8443] - ', process.env.PORT);
     bot.telegram.setWebhook(`${process.env.WEBHOOK_PATH}/${process.env.BOT_TOKEN}`);
     const app = new Koa();
     app.use(koaBody());
     app.use((ctx, next) => (ctx.method !== 'POST' || ctx.url === `/${process.env.BOT_TOKEN}`
-      ? bot.handleUpdate(ctx.request.body, ctx.response)
+      ? bot.handleUpdate(ctx.request.body, ctx.response).catch((error) => console.info(`Occured an error during handle updateing - ${error}`))
       : next()));
     app.listen(process.env.PORT);
   } else if (process.env.ENV === 'dev') {

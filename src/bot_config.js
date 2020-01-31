@@ -69,7 +69,7 @@ const initConfig = ({
   data.config.botMessagesPointer = botMessagesPointer !== null ? botMessagesPointer : contents.config.botMessagesPointer;
   data.config.botsMessagesIds = botsMessagesIds || contents.config.botsMessagesIds || [];
   data.config.botReply = botReply || contents.config.botReply || false;
-  data.config.isRunning = isRunning || contents.config.isRunning || false;
+  data.config.isRunning = isRunning || contents.config.isRunning || true;
   data.config.runningByDefault = runningByDefault || contents.config.runningByDefault || false;
   data.tasksPool = tasksPool || {};
 

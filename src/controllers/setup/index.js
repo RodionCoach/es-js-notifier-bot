@@ -47,6 +47,8 @@ const botInit = async (bot, stage) => {
   bot.use(session());
   bot.use(stage.middleware());
 
+  bot.on('message', (ctx) => ctx.reply());
+
   bot.action('setTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setTime'));
   bot.action('setPauseTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setPauseTime'));
   bot.action('setClearTime', (ctx) => isAdmin(ctx) && ctx.scene.enter('setClearTime'));
