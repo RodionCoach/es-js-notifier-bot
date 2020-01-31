@@ -62,9 +62,9 @@ const initConfig = ({
 
   data.config.botId = botId;
   data.config.currentWorkingChatId = process.env.BOT_WORKING_CHAT_ID || currentWorkingChatId || contents.config.currentWorkingChatId;
-  data.config.time = time || contents.config.time || process.env.BOT_OCCUR_TIME;
-  data.config.pauseTime = pauseTime || contents.config.pauseTime || process.env.BOT_PAUSE_TIME;
-  data.config.clearTime = clearTime || contents.config.clearTime || process.env.BOT_CLEAR_TIME;
+  data.config.time = process.env.BOT_OCCUR_TIME || time || contents.config.time;
+  data.config.pauseTime = process.env.BOT_PAUSE_TIME || pauseTime || contents.config.pauseTime;
+  data.config.clearTime = process.env.BOT_CLEAR_TIME || clearTime || contents.config.clearTime;
   data.config.botsMessagesBufferSize = botsMessagesBufferSize || contents.config.botsMessagesBufferSize || process.env.BOT_MESSAGES_AMOUNT;
   data.config.botMessagesPointer = botMessagesPointer !== null ? botMessagesPointer : contents.config.botMessagesPointer;
   data.config.botsMessagesIds = botsMessagesIds || contents.config.botsMessagesIds || [];

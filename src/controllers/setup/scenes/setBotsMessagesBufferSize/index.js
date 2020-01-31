@@ -1,19 +1,20 @@
 const WizardScene = require('telegraf/scenes/wizard');
+const cron = require('node-cron');
 const {
   isAdmin, deleteMessage,
 } = require('../../../functions');
 const { setBotConfig, pushToBotsMessages } = require('../../../../bot_config');
 const { keqboardCancel } = require('../../markup');
-const { validateBufferSize } = require('../../../validation');
 require('dotenv').config();
 
-const setBotsMessagesBufferSizeScene = new WizardScene('setBotsMessagesBufferSize',
+const setTimeScene = new WizardScene('setTime',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type bots messages buffer size: [1-100]');
+    keqboardCancel(ctx, 'Please type cron format time: * * * * *')
+      .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
 
     return ctx.wizard.next();
   },
-  (ctx) => {
+  async (ctx) => {
     if (!isAdmin(ctx)) {
       return ctx.scene.leave();
     }
@@ -25,9 +26,9 @@ const setBotsMessagesBufferSizeScene = new WizardScene('setBotsMessagesBufferSiz
       return ctx.scene.leave();
     }
     deleteMessage(ctx);
-    if (validateBufferSize(message)) {
-      setBotConfig({ propertyName: 'botsMessagesBufferSize', value: message });
-      ctx.reply(`Done!\nMessage's Buffer Size is ${message}`)
+    if (cron.validate(message)) {
+      setBotConfig({ propertyName: 'time', value: message });
+      await ctx.reply(`Done!\nBot occur time is ${message}`)
         .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
 
       return ctx.scene.leave();
@@ -39,4 +40,4 @@ const setBotsMessagesBufferSizeScene = new WizardScene('setBotsMessagesBufferSiz
     return ctx.wizard.steps[ctx.wizard.cursor](ctx);
   });
 
-module.exports = setBotsMessagesBufferSizeScene;
+module.exports = setTimeScene;

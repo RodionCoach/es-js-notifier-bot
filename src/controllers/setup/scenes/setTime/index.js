@@ -9,7 +9,8 @@ require('dotenv').config();
 
 const setTimeScene = new WizardScene('setTime',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type cron format time: * * * * *');
+    keqboardCancel(ctx, 'Please type cron format time: * * * * *')
+      .then((res) =>{ console.log('res', res); pushToBotsMessages(res.message_id); }).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
 
     return ctx.wizard.next();
   },

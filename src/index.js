@@ -8,10 +8,11 @@ require('dotenv').config();
 
   if (process.env.ENV === 'prod') {
     console.info(process.env.ENV);
+    console.info('Currently port is (one of 443, 80, 88, 8443) - ', process.env.PORT);
     bot.telegram.setWebhook(`${process.env.WEBHOOK_PATH}/${process.env.BOT_TOKEN}`);
     const app = new Koa();
     app.use(koaBody());
-    app.use((ctx, next) => (ctx.url === `/${process.env.BOT_TOKEN}`
+    app.use((ctx, next) => (ctx.method !== 'POST' || ctx.url === `/${process.env.BOT_TOKEN}`
       ? bot.handleUpdate(ctx.request.body, ctx.response)
       : next()));
     app.listen(process.env.PORT);

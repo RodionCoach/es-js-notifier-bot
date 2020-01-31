@@ -9,7 +9,8 @@ require('dotenv').config();
 
 const setPauseTimeScene = new WizardScene('setPauseTime',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type cron format pause time: * * * * *');
+    keqboardCancel(ctx, 'Please type cron format pause time: * * * * *')
+      .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
     return ctx.wizard.next();
   },
   (ctx) => {

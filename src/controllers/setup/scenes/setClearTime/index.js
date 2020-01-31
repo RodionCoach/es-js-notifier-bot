@@ -9,7 +9,8 @@ require('dotenv').config();
 
 const setClearTimeScene = new WizardScene('setClearTime',
   (ctx) => {
-    keqboardCancel(ctx, 'Please type cron format of Clearing time: * * * * *');
+    keqboardCancel(ctx, 'Please type cron format of Clearing time: * * * * *')
+      .then((res) => pushToBotsMessages(res.message_id)).catch((error) => console.info(`Something went wrong on bot reply - ${error}`));
 
     return ctx.wizard.next();
   },
