@@ -61,7 +61,7 @@ const initConfig = ({
   const contents = readBotConfig();
 
   data.config.botId = botId;
-  data.config.currentWorkingChatId = process.env.BOT_WORKING_CHAT_ID || currentWorkingChatId || contents.config.currentWorkingChatId;
+  data.config.currentWorkingChatId = currentWorkingChatId || contents.config.currentWorkingChatId || process.env.BOT_WORKING_CHAT_ID;
   data.config.time = time || contents.config.time || process.env.BOT_OCCUR_TIME;
   data.config.pauseTime = pauseTime || contents.config.pauseTime || process.env.BOT_PAUSE_TIME;
   data.config.clearTime = clearTime || contents.config.clearTime || process.env.BOT_CLEAR_TIME;
