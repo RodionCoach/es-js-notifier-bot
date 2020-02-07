@@ -1,7 +1,7 @@
 const session = require('telegraf/session');
 const Telegram = require('telegraf/telegram');
 const { isAdmin } = require('../functions');
-const { initConfig } = require('../../bot_config');
+const { initConfig } = require('../../config/bot_config');
 const botRestoreSettings = require('../../config/botRestoreSettings');
 const {
   botClearMessages,

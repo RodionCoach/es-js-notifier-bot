@@ -4,7 +4,7 @@ const {
   isWorkingChat,
 } = require('../../functions');
 const { botNotify } = require('../../timer');
-const { data, setBotConfig, pushToBotsMessages } = require('../../../bot_config');
+const { data, setBotConfig, pushToBotsMessages } = require('../../../config/bot_config');
 
 const botStop = (ctx) => {
   deleteMessage(ctx);

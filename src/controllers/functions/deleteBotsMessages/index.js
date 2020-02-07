@@ -1,4 +1,4 @@
-const { data, setBotConfig } = require('../../../bot_config');
+const { data, setBotConfig } = require('../../../config/bot_config');
 
 const deleteBotsMessages = ({ dataConfig = [], ctx = null, telegram = null }) => {
   if (dataConfig.length === 0 && data.botReply) ctx.reply('there is nothing to delete');

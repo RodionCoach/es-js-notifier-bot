@@ -1,7 +1,7 @@
 const {
   isAdmin, deleteMessage,
 } = require('../../functions');
-const { data, setBotConfig, pushToBotsMessages } = require('../../../bot_config');
+const { data, setBotConfig, pushToBotsMessages } = require('../../../config/bot_config');
 
 const botReply = (ctx) => {
   if (deleteMessage(ctx) && isAdmin(ctx)) {

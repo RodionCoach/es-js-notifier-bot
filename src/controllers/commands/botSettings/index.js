@@ -1,7 +1,7 @@
 const {
   isAdmin, deleteMessage,
 } = require('../../functions');
-const { data, pushToBotsMessages } = require('../../../bot_config');
+const { data, pushToBotsMessages } = require('../../../config/bot_config');
 
 const botSettings = (ctx) => deleteMessage(ctx) && isAdmin(ctx) && ctx.reply(`current bot settings: ${JSON.stringify({
   config: { ...data.config, currentChatId: ctx.message.chat.id },

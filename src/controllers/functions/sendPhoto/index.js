@@ -1,4 +1,4 @@
-const { data, pushToBotsMessages } = require('../../../bot_config');
+const { data, pushToBotsMessages } = require('../../../config/bot_config');
 
 const sendPhoto = ({ photoId, ctx = null, telegram = null }) => {
   if (ctx !== null) {

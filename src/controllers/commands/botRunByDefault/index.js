@@ -6,7 +6,7 @@ const {
   sendPhoto,
 } = require('../../functions');
 const { botNotify, scheduleInit } = require('../../timer');
-const { data, setBotConfig, pushToBotsMessages } = require('../../../bot_config');
+const { data, setBotConfig, pushToBotsMessages } = require('../../../config/bot_config');
 
 const botRunByDefault = (ctx) => {
   deleteMessage(ctx);

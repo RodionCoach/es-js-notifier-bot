@@ -1,5 +1,5 @@
 const { botNotify, scheduleInit } = require('../../controllers/timer');
-const { data, setBotConfig } = require('../../bot_config');
+const { data, setBotConfig } = require('../bot_config');
 const { deleteBotsMessages, sendPhoto } = require('../../controllers/functions');
 
 const botRestoreSettings = (telegram) => {

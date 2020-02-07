@@ -2,7 +2,7 @@ const WizardScene = require('telegraf/scenes/wizard');
 const {
   isAdmin, deleteMessage,
 } = require('../../../functions');
-const { setBotConfig, pushToBotsMessages } = require('../../../../bot_config');
+const { setBotConfig, pushToBotsMessages } = require('../../../../config/bot_config');
 const { keqboardCancel } = require('../../markup');
 const { validateBufferSize } = require('../../../validation');
 require('dotenv').config();

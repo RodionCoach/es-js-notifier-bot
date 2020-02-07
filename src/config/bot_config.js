@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { MongoClient, Schema } = require('mongoose');
 require('dotenv').config();
 
 const data = {
@@ -58,23 +59,34 @@ const initConfig = ({
   tasksPool = null,
   ...rest
 }) => {
-  const contents = readBotConfig();
+  const client = new MongoClient(process.env.DB_URI, { useNewUrlParser: true });
 
-  data.config.botId = botId;
-  data.config.currentWorkingChatId = currentWorkingChatId || contents.config.currentWorkingChatId || process.env.BOT_WORKING_CHAT_ID;
-  data.config.time = time || contents.config.time || process.env.BOT_OCCUR_TIME;
-  data.config.pauseTime = pauseTime || contents.config.pauseTime || process.env.BOT_PAUSE_TIME;
-  data.config.clearTime = clearTime || contents.config.clearTime || process.env.BOT_CLEAR_TIME;
-  data.config.botsMessagesBufferSize = botsMessagesBufferSize || contents.config.botsMessagesBufferSize || process.env.BOT_MESSAGES_AMOUNT;
-  data.config.botMessagesPointer = botMessagesPointer !== null ? botMessagesPointer : contents.config.botMessagesPointer;
-  data.config.botsMessagesIds = botsMessagesIds || contents.config.botsMessagesIds || [];
-  data.config.botReply = botReply || contents.config.botReply || false;
-  data.config.isRunning = isRunning || contents.config.isRunning || false;
-  data.config.runningByDefault = runningByDefault || contents.config.runningByDefault || false;
-  data.tasksPool = tasksPool || {};
+  if (!client) {
+    const contents = readBotConfig();
 
-  saveBotConfig();
-  console.info('Bot setup by default', rest);
+    data.config.botId = botId;
+    data.config.currentWorkingChatId = currentWorkingChatId || contents.config.currentWorkingChatId || process.env.BOT_WORKING_CHAT_ID;
+    data.config.time = time || contents.config.time || process.env.BOT_OCCUR_TIME;
+    data.config.pauseTime = pauseTime || contents.config.pauseTime || process.env.BOT_PAUSE_TIME;
+    data.config.clearTime = clearTime || contents.config.clearTime || process.env.BOT_CLEAR_TIME;
+    data.config.botsMessagesBufferSize = botsMessagesBufferSize || contents.config.botsMessagesBufferSize || process.env.BOT_MESSAGES_AMOUNT;
+    data.config.botMessagesPointer = botMessagesPointer !== null ? botMessagesPointer : contents.config.botMessagesPointer;
+    data.config.botsMessagesIds = botsMessagesIds || contents.config.botsMessagesIds || [];
+    data.config.botReply = botReply || contents.config.botReply || false;
+    data.config.isRunning = isRunning || contents.config.isRunning || false;
+    data.config.runningByDefault = runningByDefault || contents.config.runningByDefault || false;
+    data.tasksPool = tasksPool || {};
+
+    saveBotConfig();
+    console.info(`Bot setup restored from local json. [${rest}]`);
+
+    return;
+  }
+
+  client.connect((err) => {
+    const collection = client.db(process.env.DB_NAME).collection(process.env.DB_COLLECTION);
+    return collection;
+  });
 };
 
 const setBotConfig = ({ params = null, propertyName = '', value = null }) => {
